@@ -1,9 +1,10 @@
 package com.example.bence.koinz
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
@@ -12,7 +13,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var tally = 0
+    private val tag = "Mainactivity"
+
+    private var downloadDate = "" // Format: YYYY/MM/DD
+    private val preferencesFile = "MyPrefsFile" // for storing preferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +38,28 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
 
         }
+        friendsbutton.setOnClickListener{_ ->
+            val intent= Intent( this, Friends::class.java)
+            startActivity(intent)
+        }
+    }
+
+    override fun onStart() {
+
+        super.onStart()
+        val settings= getSharedPreferences(preferencesFile, Context.MODE_PRIVATE)
+        downloadDate=settings.getString("lastDownloadDate","")
+        Log.d(tag,"[onStart] Recalled lastDownloadDate is `$downloadDate`")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(tag,"[onStop] Storing lastDownloadDate of $downloadDate")
+        val settings= getSharedPreferences(preferencesFile, Context.MODE_PRIVATE)
+        val editor = settings.edit()
+        editor.putString("lastDownloadDate",downloadDate)
+
+        editor.apply()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

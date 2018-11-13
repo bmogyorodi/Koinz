@@ -3,7 +3,8 @@
     package="com.example.bence.koinz">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+      <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,7 +24,8 @@
         </activity>
         <activity android:name=".Map" />
         <activity android:name=".Bankmenu" />
-        <activity android:name=".Bonuses"></activity>
+        <activity android:name=".Bonuses" />
+        <activity android:name=".Friends"></activity>
     </application>
 
 </manifest>

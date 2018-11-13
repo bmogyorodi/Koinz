@@ -44,7 +44,7 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener {
             enableLocation()
         }
     }
-    fun enableLocation(){
+    private fun enableLocation(){
         if (PermissionsManager.areLocationPermissionsGranted(this)){
                 initializeLocationEngine()
                 initializeLocationLayer()
@@ -106,8 +106,12 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener {
     override fun onConnected() {
     locationEngine?.requestLocationUpdates()
     }
+    @SuppressWarnings("MissingPermission")
     override fun onStart() {
         super.onStart()
+        if(PermissionsManager.areLocationPermissionsGranted(this)){
+            locationEngine?.requestLocationUpdates()
+            locationLayerPlugin?.onStart()}
         mapView.onStart()
     }
 
@@ -123,12 +127,15 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener {
 
     override fun onStop() {
         super.onStop()
+        locationEngine?.removeLocationUpdates()
+        locationLayerPlugin?.onStop()
         mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mapView.onDestroy()
+        locationEngine?.deactivate()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
