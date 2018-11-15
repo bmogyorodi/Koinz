@@ -4,6 +4,7 @@ import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineListener
 import com.mapbox.android.core.location.LocationEnginePriority
@@ -25,7 +26,7 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener {
 
     private lateinit var mapView: MapView
     private lateinit var map: MapboxMap
-    private lateinit var permissionsManager: PermissionsManager
+    private lateinit var permissionManager: PermissionsManager
     private lateinit var originLocation: Location
 
     private  var locationEngine: LocationEngine? = null
@@ -44,14 +45,15 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener {
             enableLocation()
         }
     }
+
     private fun enableLocation(){
         if (PermissionsManager.areLocationPermissionsGranted(this)){
-                initializeLocationEngine()
-                initializeLocationLayer()
+            initializeLocationEngine()
+            initializeLocationLayer()
             }
          else{
-            permissionsManager= PermissionsManager(this)
-            permissionsManager.requestLocationPermissions(this)
+            permissionManager= PermissionsManager(this)
+            permissionManager.requestLocationPermissions(this)
         }
 
     }

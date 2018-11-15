@@ -11,12 +11,7 @@ interface DownLoadCompleteListener {
     fun downloadComplete(result: String)
 }
 
-object DownloadCompleteRunner: DownLoadCompleteListener{
-    var result : String? =null
-    override fun downloadComplete(result: String) {
-        this.result = result
-    }
-}
+
 class DownloadFileTask(private val caller: DownLoadCompleteListener):
         AsyncTask<String, Void, String> (){
 
