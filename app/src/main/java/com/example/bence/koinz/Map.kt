@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
+import android.widget.Toast
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineListener
 import com.mapbox.android.core.location.LocationEnginePriority
@@ -85,7 +86,7 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener {
     }
 
     override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {
-         //Present a toast or dialogue on why they need to grant access
+         Toast.makeText(this,"You can't collect coinz without allowing access to your location!",Toast.LENGTH_SHORT)//Present a toast or dialogue on why they need to grant access
     }
 
     override fun onPermissionResult(granted: Boolean) {

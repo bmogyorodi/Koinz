@@ -7,8 +7,10 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.google.firebase.database.FirebaseDatabase
 import com.mapbox.geojson.FeatureCollection
 import kotlinx.android.synthetic.main.activity_main.*
+import org.json.JSONObject
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -18,7 +20,8 @@ class MainActivity : AppCompatActivity() {
 
     private val tag = "Mainactivity"
 
-    private var downloadDate = "" /* Format: YYYY/MM/DD */
+    private var downloadDate = ""/* Format: YYYY/MM/DD */
+    private var geofeatures = ""
 
 
      val prefsFile = "MyPrefsFile"// for storing preferences
@@ -51,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         } //takes user to bonuses activity
         friendsbutton.setOnClickListener{_ ->
-            val intent= Intent( this, Friends::class.java)
+            val intent= Intent( this, Login::class.java)
             startActivity(intent)
         } // takes user to friends activity
 
@@ -70,18 +73,17 @@ class MainActivity : AppCompatActivity() {
         val formatter= DateTimeFormatter.ofPattern("yyyy/MM/dd")
         val formatted = today.format(formatter)
         val settings= getSharedPreferences(prefsFile, Context.MODE_PRIVATE)
-        downloadDate=settings.getString("lastDownloadDate","") //getting last download date from prefs file
-        if (downloadDate==formatted){
-            datetag.text = "Files up to date!"
+        downloadDate=settings.getString("lastDownloadDate","")//getting last download date from prefs file
+        geofeatures= settings.getString("JsonFile","")/* get last downloaded Jsonfile */
+
+        if (downloadDate==formatted && geofeatures != ""){
+            datetag.text = "Files are up to date!"
+            Log.d(tag,"Files are up to date!")
+
         }
         else{
             downloadDate=formatted
-            val url ="http://homepages.inf.ed.ac.uk/stg/coinz/$formatted/coinzmap.geojson"
-
-            val download= DownloadFileTask(DownloadCompleteRunner)
-            val geo=download.execute(url).get()
-            var geoj=FeatureCollection.fromJson(geo).features()
-            geoj?.get(1)?.getStringProperty("id")
+            downloadgeojson(downloadDate)
 
 
 
@@ -91,13 +93,9 @@ class MainActivity : AppCompatActivity() {
 
 
         }
-        val url ="http://homepages.inf.ed.ac.uk/stg/coinz/$formatted/coinzmap.geojson"
+        downloadgeojson(downloadDate)
 
-        val download= DownloadFileTask(DownloadCompleteRunner) //to be deleted once geojson reader installed
-        download.execute(url) //to be deleted once geojson reader installed
-        val geo=DownloadCompleteRunner.result //to be deleted once geojson reader installed
-        datetag.text = "Last update: $downloadDate"
-        Log.d(tag,"[onStart] Recalled lastDownloadDate is `$downloadDate`")
+
     }
 
     override fun onStop() {
@@ -106,6 +104,7 @@ class MainActivity : AppCompatActivity() {
         val settings= getSharedPreferences(prefsFile, Context.MODE_PRIVATE)
         val editor = settings.edit()
         editor.putString("lastDownloadDate",downloadDate)
+        editor.putString("JsonFile",geofeatures)
 
         editor.apply()
     }
@@ -124,5 +123,38 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+    private fun downloadgeojson(todaydate : String){
+        val url ="http://homepages.inf.ed.ac.uk/stg/coinz/$todaydate/coinzmap.geojson"
+
+        val download= DownloadFileTask(DownloadCompleteRunner)
+
+        val geo=download.execute(url).get()
+
+        geofeatures=geo
+        val json: JSONObject = JSONObject(geo)
+        val rates=json.getJSONObject("rates")
+        todayrates(rates)
+        val features= FeatureCollection.fromJson(geo).features()
+        val feature=features?.get(0)?.properties()
+        val props=features?.get(1)?.properties()
+
+
+
+
+
+    }
+    private fun todayrates(rates: JSONObject){
+        val shil=rates.getString("SHIL").toFloat()
+        val dolr=rates.getString("DOLR").toFloat()
+        val quid=rates.getString("QUID").toFloat()
+        val peny=rates.getString("PENY").toFloat()
+        val settings= getSharedPreferences(prefsFile, Context.MODE_PRIVATE)
+        val editor = settings.edit()
+        editor.putFloat("shilEX",shil)
+        editor.putFloat("dolrEX",dolr)
+        editor.putFloat("quidEX",quid)
+        editor.putFloat("penyEX",peny)
+        editor.apply()
     }
 }

@@ -12,10 +12,10 @@ class Currency : AppCompatActivity() {
     private var quid=0
     private var shil=0
     private var dolr=0
-    private var penyx=0
-    private var quidx=0
-    private var shilx=0
-    private var dolrx=0
+    private var penyx=0.0
+    private var quidx=0.0
+    private var shilx=0.0
+    private var dolrx=0.0
     private var penysel=0
     private var quidsel=0
     private var shilsel=0
@@ -25,7 +25,7 @@ class Currency : AppCompatActivity() {
     val prefs= "MyPrefsFile"
 
     private fun updateaddgold(){
-        addedgold=penyx*penysel+dolrx*dolrsel+shilx*shilsel+quidx*quidsel
+        addedgold= (penyx*penysel+dolrx*dolrsel+shilx*shilsel+quidx*quidsel).toInt()
         goldfromex.text="$addedgold"
 
     }
@@ -142,12 +142,12 @@ class Currency : AppCompatActivity() {
         quid=settings.getInt("quidNum",0)
         shil=settings.getInt("shilNum",0)
         dolr=settings.getInt("dolrNum",0)
-        penyx=settings.getInt("penyEx",10)
-        quidx=settings.getInt("quidEx",10)
-        shilx=settings.getInt("shilEx",10)
-        dolrx=settings.getInt("dolrEx",10)
+        penyx= settings.getFloat("penyEX", 10F).toDouble()
+        quidx= settings.getFloat("quidEX", 10F).toDouble()
+        shilx= settings.getFloat("shilEX", 10F).toDouble()
+        dolrx= settings.getFloat("dolrEX", 10F).toDouble()
         updatetreasury()
-        exrate.text="Changerates: Peny:$penyx Quid:$quidx Shil:$shilx Dolr:$dolrx"
+        exrate.text="Exchange rates: \n Peny: $penyx \n Quid: $quidx \n Shil: $shilx \n Dolr: $dolrx"
 
     }
 
