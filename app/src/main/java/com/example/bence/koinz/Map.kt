@@ -1,11 +1,13 @@
 package com.example.bence.koinz
 
+import android.content.Context
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Toast
+import android.widget.Toast.*
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineListener
 import com.mapbox.android.core.location.LocationEnginePriority
@@ -13,16 +15,19 @@ import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.annotations.Marker
+import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.camera.CameraUpdate
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.maps.MapboxMap.OnMapClickListener
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
 
-class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener {
+class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener , MapboxMap.OnMarkerClickListener {
 
 
     private lateinit var mapView: MapView
@@ -32,6 +37,9 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener {
 
     private  var locationEngine: LocationEngine? = null
     private var locationLayerPlugin: LocationLayerPlugin? = null
+    private val coinzFile= "Coinzfile"
+    private val tag="Mapview"
+    private val markers=ArrayList<Marker>(50)
 
 
 
@@ -43,8 +51,39 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener {
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync { mapboxMap ->
             map = mapboxMap
+            Log.d(tag,"Map initialised!")
+            for (i in 0..49)
+            {
+                val coin = getdailycoin(i)
+                markers.add(map.addMarker(MarkerOptions()
+                        .position(LatLng(coin.getlat(), coin.getlong()))
+                        .title("id: "+coin.getid()+"\ncurrency:"+coin.getcurrency()+"\nvalue:"+coin.getvalue().toString())))
+
+
+
+
+            }
+            Log.d(tag,"Markers placed on map.")
+
+
+
             enableLocation()
         }
+
+
+    }
+
+
+     private fun getdailycoin(i: Int):Coinz{
+        val setting =getSharedPreferences(coinzFile, Context.MODE_PRIVATE)
+        val id=setting.getString("$i id","missingid")
+        val value=setting.getFloat("$i value", 0.0F)
+        val currency= setting.getString("$i currency","missingcurr")
+        val markersym=setting.getInt("$i markersym",0)
+        val markercolor=setting.getString("$i markercolor","000000")
+        val longitude= setting.getFloat("$i longitude",0.0F)
+        val latitude= setting.getFloat("$i latitude",0.0F)
+        return Coinz(id,value,currency,markersym, markercolor, latitude, longitude)
     }
 
     private fun enableLocation(){
@@ -86,7 +125,7 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener {
     }
 
     override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {
-         Toast.makeText(this,"You can't collect coinz without allowing access to your location!",Toast.LENGTH_SHORT)//Present a toast or dialogue on why they need to grant access
+         Toast.makeText(this,"You can't collect coinz without allowing access to your location!", LENGTH_SHORT)//Present a toast or dialogue on why they need to grant access
     }
 
     override fun onPermissionResult(granted: Boolean) {
@@ -105,6 +144,13 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener {
              setCameraPosition(location)
          }
     }
+    override fun onMarkerClick(marker: Marker): Boolean {
+        Log.d(tag,"Markerclick gegistered")
+        map.removeMarker(marker)
+        Toast.makeText(this, marker.getTitle(), Toast.LENGTH_LONG).show()
+        return true
+    }
+
     @SuppressWarnings("MissingPermission")
     override fun onConnected() {
     locationEngine?.requestLocationUpdates()
@@ -116,6 +162,7 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener {
             locationEngine?.requestLocationUpdates()
             locationLayerPlugin?.onStart()}
         mapView.onStart()
+
     }
 
     override fun onResume() {
@@ -151,5 +198,8 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener {
         super.onLowMemory()
         mapView.onLowMemory()
     }
+
+
+
 }
 

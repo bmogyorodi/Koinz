@@ -7,9 +7,13 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.google.firebase.database.FirebaseDatabase
+import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
+import com.mapbox.geojson.Point
 import kotlinx.android.synthetic.main.activity_main.*
+import org.json.JSONArray
 import org.json.JSONObject
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -21,10 +25,11 @@ class MainActivity : AppCompatActivity() {
     private val tag = "Mainactivity"
 
     private var downloadDate = ""/* Format: YYYY/MM/DD */
-    private var geofeatures = ""
 
 
-     val prefsFile = "MyPrefsFile"// for storing preferences
+     private val prefsFile = "MyPrefsFile"
+     private val coinzFile= "Coinzfile"
+    // for storing preferences
      object DownloadCompleteRunner: DownLoadCompleteListener{
         var result : String? =null
         override fun downloadComplete(result: String) {
@@ -73,10 +78,9 @@ class MainActivity : AppCompatActivity() {
         val formatter= DateTimeFormatter.ofPattern("yyyy/MM/dd")
         val formatted = today.format(formatter)
         val settings= getSharedPreferences(prefsFile, Context.MODE_PRIVATE)
-        downloadDate=settings.getString("lastDownloadDate","")//getting last download date from prefs file
-        geofeatures= settings.getString("JsonFile","")/* get last downloaded Jsonfile */
+        downloadDate=settings.getString("lastDownloadDate","")//getting last download date from prefs file/* get last downloaded Jsonfile */
 
-        if (downloadDate==formatted && geofeatures != ""){
+        if (downloadDate==formatted){
             datetag.text = "Files are up to date!"
             Log.d(tag,"Files are up to date!")
 
@@ -84,6 +88,8 @@ class MainActivity : AppCompatActivity() {
         else{
             downloadDate=formatted
             downloadgeojson(downloadDate)
+            datetag.text = "Files have been updated!"
+            Log.d(tag,"Files have been updated")
 
 
 
@@ -93,7 +99,7 @@ class MainActivity : AppCompatActivity() {
 
 
         }
-        downloadgeojson(downloadDate)
+        //downloadgeojson(downloadDate)
 
 
     }
@@ -104,7 +110,6 @@ class MainActivity : AppCompatActivity() {
         val settings= getSharedPreferences(prefsFile, Context.MODE_PRIVATE)
         val editor = settings.edit()
         editor.putString("lastDownloadDate",downloadDate)
-        editor.putString("JsonFile",geofeatures)
 
         editor.apply()
     }
@@ -131,13 +136,20 @@ class MainActivity : AppCompatActivity() {
 
         val geo=download.execute(url).get()
 
-        geofeatures=geo
+
         val json: JSONObject = JSONObject(geo)
         val rates=json.getJSONObject("rates")
+        val features=json.getJSONArray("features")
+        val fet=features.getJSONObject(0)
+        val properties=fet.getJSONObject("properties")
         todayrates(rates)
-        val features= FeatureCollection.fromJson(geo).features()
-        val feature=features?.get(0)?.properties()
-        val props=features?.get(1)?.properties()
+        todaycoinz(features)
+        Toast.makeText(this,"Update completed!",Toast.LENGTH_SHORT)
+
+
+
+
+
 
 
 
@@ -157,4 +169,35 @@ class MainActivity : AppCompatActivity() {
         editor.putFloat("penyEX",peny)
         editor.apply()
     }
+    private fun todaycoinz(features: JSONArray) {
+        val settings=getSharedPreferences(coinzFile,Context.MODE_PRIVATE)
+        val editor=settings.edit()
+        for (i in 0..49)
+        {
+            val feature=features.getJSONObject(i)
+            val properties=feature.getJSONObject("properties")
+            val geometry=feature.getJSONObject("geometry")
+            val id=properties.getString("id")
+            val value=properties.getString("value").toFloat()
+            val currency=properties.getString("currency")
+            val markersym=properties.getString("marker-symbol").toInt()
+            val coordinates=geometry.getJSONArray("coordinates")
+            val markercolor=properties.getString("marker-color")
+            val longitude=coordinates.getDouble(0)
+            val latitude=coordinates.getDouble(1)
+            editor.putString("$i id", id)
+            editor.putFloat("$i value",value)
+            editor.putString("$i currency",currency)
+            editor.putInt("$i markersym",markersym)
+            editor.putString("$i markercolor",markercolor)
+            editor.putFloat("$i longitude", longitude.toFloat())
+            editor.putFloat("$i latitude", latitude.toFloat())
+
+
+
+        }
+        editor.apply()
+
+    }
+
 }
