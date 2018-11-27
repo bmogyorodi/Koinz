@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="92dp"
         android:layout_marginTop="12dp"
-        android:text="missingval"
+        android:text="@string/missingval"
         android:visibility="visible"
         app:layout_constraintStart_toEndOf="@+id/stepback"
         app:layout_constraintTop_toTopOf="@+id/stepback" />
@@ -28,7 +28,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/stepfoward"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/stepfoward"
-        app:srcCompat="@android:drawable/arrow_down_float" />
+        app:srcCompat="@android:drawable/arrow_down_float"
+        />
 
     <ImageButton
         android:id="@+id/stepfoward"
