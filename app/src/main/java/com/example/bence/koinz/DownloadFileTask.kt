@@ -1,7 +1,6 @@
 package com.example.bence.koinz
 
 import android.os.AsyncTask
-import android.renderscript.ScriptGroup
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection

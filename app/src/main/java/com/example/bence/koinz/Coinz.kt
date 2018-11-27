@@ -1,9 +1,9 @@
 package com.example.bence.koinz
 
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.Point
 
-class Coinz constructor(id:String,value:Float,currency:String,markersym:Int,markercolor:String,latitude:Float,longitude:Float){
+
+
+class Coinz constructor(id:String,value:Float,currency:String,markersym:Int,markercolor:String,latitude:Float,longitude:Float,taken:Boolean){
 
     private val id=id
     private val value =value
@@ -12,6 +12,8 @@ class Coinz constructor(id:String,value:Float,currency:String,markersym:Int,mark
     private val markercolor=markercolor
     private val latitude=latitude
     private val longitude=longitude
+    private val taken=taken
+
 
 
      fun getid(): String {
@@ -21,13 +23,13 @@ class Coinz constructor(id:String,value:Float,currency:String,markersym:Int,mark
         return this.value.toString().toFloat()
     }
      fun getcurrency():String{
-        return this.currency.toString()
+        return this.currency
     }
      fun getmarkersym():Int{
         return this.markersym.toString().toInt()
     }
      fun getmarkercolor():String{
-        return this.markercolor.toString()
+        return this.markercolor
     }
      fun getlat(): Double{
         return this.latitude.toDouble()
@@ -35,6 +37,11 @@ class Coinz constructor(id:String,value:Float,currency:String,markersym:Int,mark
      fun getlong(): Double{
         return this.longitude.toDouble()
     }
+    fun istaken(): Boolean{
+        return this.taken
+    }
+
+
 
 
 

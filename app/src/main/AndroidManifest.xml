@@ -34,7 +34,8 @@
         <activity android:name=".Friends" />
         <activity android:name=".Currency" />
         <activity android:name=".Login" />
-        <activity android:name=".Register"></activity>
+        <activity android:name=".Register" />
+        <activity android:name=".Meltcoinz"></activity>
     </application>
 
 </manifest>

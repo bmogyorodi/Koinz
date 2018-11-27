@@ -22,7 +22,7 @@ class Currency : AppCompatActivity() {
     private var dolrsel=0
     private var addedgold=0
     // currency names are the amount the player has, curencyx is the exchange rate between gold and currency, currencysel is the amount from that currency selected for conversion
-    val prefs= "MyPrefsFile"
+    private val prefs= "MyPrefsFile"
 
     private fun updateaddgold(){
         addedgold= (penyx*penysel+dolrx*dolrsel+shilx*shilsel+quidx*quidsel).toInt()
@@ -105,11 +105,11 @@ class Currency : AppCompatActivity() {
 
         }
         exchange.setOnClickListener{_ ->
-            gold=addedgold+gold
-            peny=peny-penysel
-            quid=quid-quidsel
-            shil=shil-shilsel
-            dolr=dolr-dolrsel
+            gold += addedgold
+            peny -= penysel
+            quid -= quidsel
+            shil -= shilsel
+            dolr -= dolrsel
              penysel=0
              quidsel=0
              shilsel=0

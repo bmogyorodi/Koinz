@@ -1,27 +1,37 @@
 package com.example.bence.koinz
 
+import java.util.ArrayList
+
 class Wallet {
-    var coin = mutableListOf<Int>()
-    var cur = mutableListOf<String>()
+    private var coins = ArrayList<Coinz>(50)
+
 
     fun addCoin(coinz: Coinz){
-        if(coin.size<100) {
-            coin.add(coinz.getmarkersym())
-            cur.add(coinz.getcurrency())
+        if(coins.size<50) {
+            coins.add(coinz)
         }
 
     }
-    fun removeCoin(index: Int){
-        if(index<this.coin.size)
+    fun removeCoin(coinz: Coinz):Coinz? {
+        if(coins.contains(coinz))
         {
-            coin.removeAt(index)
-            cur.removeAt(index)
+            coins.remove(coinz)
+            return coinz
         }
-        fun getcoinvalue(index: Int): Int {
-            return coin.get(index)
-        }
-        fun getcoincurrency(index: Int): String {
-            return cur.get(index)
-        }
+        else{return null}
+    }
+    fun getCoin(index:Int):Coinz?{
+        if(!(coins.size>index)){
+            return null
+        }else{return coins.get(index)}
+    }
+    fun size():Int{
+      return coins.size
+    }
+    fun savewallet(){
+        //save wallet data for future use
+    }
+    fun getwallet(){
+        //to get wallet from save
     }
 }

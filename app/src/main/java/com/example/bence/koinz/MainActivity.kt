@@ -1,5 +1,6 @@
 package com.example.bence.koinz
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,21 +9,19 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.google.firebase.database.FirebaseDatabase
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.FeatureCollection
-import com.mapbox.geojson.Point
+
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
+
 
 
 class MainActivity : AppCompatActivity() {
 
     private val tag = "Mainactivity"
+
 
     private var downloadDate = ""/* Format: YYYY/MM/DD */
 
@@ -31,7 +30,7 @@ class MainActivity : AppCompatActivity() {
      private val coinzFile= "Coinzfile"
     // for storing preferences
      object DownloadCompleteRunner: DownLoadCompleteListener{
-        var result : String? =null
+        private var result : String? =null
         override fun downloadComplete(result: String) {
             this.result = result
             
@@ -70,6 +69,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onStart() {
 
         super.onStart()
@@ -137,11 +137,9 @@ class MainActivity : AppCompatActivity() {
         val geo=download.execute(url).get()
 
 
-        val json: JSONObject = JSONObject(geo)
+        val json = JSONObject(geo)
         val rates=json.getJSONObject("rates")
         val features=json.getJSONArray("features")
-        val fet=features.getJSONObject(0)
-        val properties=fet.getJSONObject("properties")
         todayrates(rates)
         todaycoinz(features)
         Toast.makeText(this,"Update completed!",Toast.LENGTH_SHORT)
@@ -192,6 +190,7 @@ class MainActivity : AppCompatActivity() {
             editor.putString("$i markercolor",markercolor)
             editor.putFloat("$i longitude", longitude.toFloat())
             editor.putFloat("$i latitude", latitude.toFloat())
+            editor.putBoolean("$i Taken", false)
 
 
 

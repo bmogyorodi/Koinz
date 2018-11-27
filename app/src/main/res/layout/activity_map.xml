@@ -7,6 +7,22 @@
     android:layout_height="match_parent"
     tools:context=".Map">
 
+    <Button
+        android:id="@+id/Pickupbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="#3f7d8f"
+        android:backgroundTint="@color/mapbox_blue"
+        android:enabled="false"
+        android:text="Select coin to pick up"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="wrap_content"

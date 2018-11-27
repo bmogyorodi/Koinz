@@ -4,9 +4,8 @@ import android.content.Context
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
-import android.widget.Toast
+import android.widget.Button
 import android.widget.Toast.*
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineListener
@@ -17,35 +16,39 @@ import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.annotations.Marker
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
-import com.mapbox.mapboxsdk.camera.CameraUpdate
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.MapboxMap.OnMapClickListener
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
 
-class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener , MapboxMap.OnMarkerClickListener {
+class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener,MapboxMap.OnMarkerClickListener {
 
 
     private lateinit var mapView: MapView
     private lateinit var map: MapboxMap
     private lateinit var permissionManager: PermissionsManager
     private lateinit var originLocation: Location
+    private lateinit var pickupbutton:Button
+    private lateinit var selmarker:Marker
 
     private  var locationEngine: LocationEngine? = null
     private var locationLayerPlugin: LocationLayerPlugin? = null
+
     private val coinzFile= "Coinzfile"
     private val tag="Mapview"
-    private val markers=ArrayList<Marker>(50)
+    private val markers=HashMap<Marker,Coinz>(50)
+    private val coinindex=HashMap<String,Int>(50)
+    private val wallet= Wallet()
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
+        pickupbutton= findViewById(R.id.Pickupbutton)
         Mapbox.getInstance(applicationContext, getString(R.string.access_token))
         mapView =findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
@@ -55,15 +58,31 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener , M
             for (i in 0..49)
             {
                 val coin = getdailycoin(i)
-                markers.add(map.addMarker(MarkerOptions()
+                if(!coin.istaken()){
+                val marker=(map.addMarker(MarkerOptions()
                         .position(LatLng(coin.getlat(), coin.getlong()))
                         .title("id: "+coin.getid()+"\ncurrency:"+coin.getcurrency()+"\nvalue:"+coin.getvalue().toString())))
+                    markers[marker] = coin
+                    coinindex[coin.getid()] = i
+
+                }
+
+
+
+
 
 
 
 
             }
+            map.setOnMarkerClickListener(this)
             Log.d(tag,"Markers placed on map.")
+            pickupbutton.setOnClickListener(){_->
+                pickupcoin(selmarker)
+                pickupbutton.isEnabled=false
+
+            }
+
 
 
 
@@ -71,10 +90,11 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener , M
         }
 
 
+
     }
 
 
-     private fun getdailycoin(i: Int):Coinz{
+        private fun getdailycoin(i: Int):Coinz{
         val setting =getSharedPreferences(coinzFile, Context.MODE_PRIVATE)
         val id=setting.getString("$i id","missingid")
         val value=setting.getFloat("$i value", 0.0F)
@@ -83,7 +103,8 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener , M
         val markercolor=setting.getString("$i markercolor","000000")
         val longitude= setting.getFloat("$i longitude",0.0F)
         val latitude= setting.getFloat("$i latitude",0.0F)
-        return Coinz(id,value,currency,markersym, markercolor, latitude, longitude)
+         val taken =setting.getBoolean("$i taken",false)
+        return Coinz(id,value,currency,markersym, markercolor, latitude, longitude,taken)
     }
 
     private fun enableLocation(){
@@ -125,7 +146,7 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener , M
     }
 
     override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {
-         Toast.makeText(this,"You can't collect coinz without allowing access to your location!", LENGTH_SHORT)//Present a toast or dialogue on why they need to grant access
+         makeText(this,"You can't collect coinz without allowing access to your location!", LENGTH_SHORT)//Present a toast or dialogue on why they need to grant access
     }
 
     override fun onPermissionResult(granted: Boolean) {
@@ -145,9 +166,28 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener , M
          }
     }
     override fun onMarkerClick(marker: Marker): Boolean {
-        Log.d(tag,"Markerclick gegistered")
-        map.removeMarker(marker)
-        Toast.makeText(this, marker.getTitle(), Toast.LENGTH_LONG).show()
+
+       Log.d(tag, "Markerclick registered")
+
+        val selected=markers.getValue(marker)
+
+
+        val distance=marker.position.distanceTo(LatLng(originLocation))
+        if (distance<1000) //later change back to 25
+        {
+            val selcurr=selected.getcurrency()
+            val value= selected.getvalue()
+            pickupbutton.isEnabled=true
+            pickupbutton.text=("Pick up $value in $selcurr currency")
+            selmarker=marker
+
+
+
+
+        }
+        else{
+            Log.d(tag,"Disatance is: $distance")
+        }
         return true
     }
 
@@ -197,6 +237,17 @@ class Map : AppCompatActivity(), PermissionsListener, LocationEngineListener , M
     override fun onLowMemory() {
         super.onLowMemory()
         mapView.onLowMemory()
+    }
+    private fun pickupcoin(marker: Marker){
+        val coin=markers.getValue(marker)
+        val index=coinindex.getValue(coin.getid())
+        map.removeMarker(marker)
+        val settings=getSharedPreferences(coinzFile,Context.MODE_PRIVATE)
+        val editor=settings.edit()
+        editor.putBoolean("$index taken",true)
+        editor.apply()
+        wallet.addCoin(coin)
+
     }
 
 
