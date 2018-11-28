@@ -51,6 +51,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
         pickupbutton= findViewById(R.id.Pickupbutton)
+        wallet.getwallet()
         Mapbox.getInstance(applicationContext, getString(R.string.access_token))
         mapView =findViewById(R.id.mapView)
         mapView?.onCreate(savedInstanceState)
@@ -145,7 +146,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
     }
 
     override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {
-         Toast.makeText(this,"Permissions: $permissionsToExplain", LENGTH_SHORT)//Present a toast or dialogue on why they need to grant access
+         Toast.makeText(this,"Permissions: $permissionsToExplain", LENGTH_SHORT).show()//Present a toast or dialogue on why they need to grant access
     }
 
     override fun onPermissionResult(granted: Boolean) {
@@ -176,7 +177,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
 
 
         val distance=marker.position.distanceTo(LatLng(originLocation))
-        if (distance<25) //later change back to 25
+        if (distance<1000) //later change back to 25
         {
             val selcurr=selected.getcurrency()
             val value= selected.getvalue()
@@ -190,7 +191,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         }
         else{
             Log.d(tag,"Disatance is: $distance")
-            makeText(this,"Distance is $distance",Toast.LENGTH_SHORT)
+            makeText(this,"Distance is $distance",Toast.LENGTH_SHORT).show()
         }
         return true
     }
@@ -223,12 +224,14 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         locationEngine.removeLocationUpdates()
         locationLayerPlugin.onStop()
         mapView?.onStop()
+        wallet.savewallet()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mapView?.onDestroy()
         locationEngine.deactivate()
+
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -249,6 +252,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         val editor=settings.edit()
         editor.putBoolean("$index taken",true)
         editor.apply()
+        coin.taken()
         wallet.addCoin(coin)
 
     }

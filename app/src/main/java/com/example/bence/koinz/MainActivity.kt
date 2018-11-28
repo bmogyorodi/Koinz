@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
@@ -21,6 +22,8 @@ import java.time.format.DateTimeFormatter
 class MainActivity : AppCompatActivity() {
 
     private val tag = "Mainactivity"
+    val user = FirebaseAuth.getInstance().currentUser
+
 
 
     private var downloadDate = ""/* Format: YYYY/MM/DD */
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         }
     } // object to download geojson file
     override fun onCreate(savedInstanceState: Bundle?) {
+        
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
@@ -73,6 +77,12 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
 
         super.onStart()
+
+
+        if(user==null){
+            val intent= Intent( this, Login::class.java)
+            startActivity(intent)
+        }
 
         val today = LocalDate.now()
         val formatter= DateTimeFormatter.ofPattern("yyyy/MM/dd")

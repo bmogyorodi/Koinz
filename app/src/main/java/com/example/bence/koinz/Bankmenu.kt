@@ -18,7 +18,7 @@ private var gold =0
 
         }
         coinmelt.setOnClickListener{_ ->
-            val intent = Intent(this, Meltcoinz::class.java)
+            val intent = Intent(this, Depositcoinz::class.java)
             startActivity(intent)
 
         }

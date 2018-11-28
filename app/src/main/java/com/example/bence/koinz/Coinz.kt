@@ -12,11 +12,15 @@ class Coinz constructor(id:String,value:Float,currency:String,markersym:Int,mark
     private val markercolor=markercolor
     private val latitude=latitude
     private val longitude=longitude
-    private val taken=taken
+    private var taken=taken
 
 
 
-     fun getid(): String {
+
+    constructor():this("", 0F,"",0,"",0F,0F,true)
+
+
+    fun getid(): String {
         return this.id.toString()
     }
      fun getvalue(): Float{
@@ -39,6 +43,9 @@ class Coinz constructor(id:String,value:Float,currency:String,markersym:Int,mark
     }
     fun istaken(): Boolean{
         return this.taken
+    }
+    fun taken(){
+        this.taken=true
     }
 
 
