@@ -13,6 +13,7 @@ class Bankmenu : AppCompatActivity() {
 private var gold =0
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        supportActionBar?.title="Bankmenu"
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bankmenu)
         curconvert.setOnClickListener{_ ->

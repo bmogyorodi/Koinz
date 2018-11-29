@@ -16,7 +16,7 @@ class Login : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
+        supportActionBar?.title="Login"
         loginbutton.setOnClickListener{_ ->
             val email = writeemail.text.toString()
             val password= writepassword.text.toString()

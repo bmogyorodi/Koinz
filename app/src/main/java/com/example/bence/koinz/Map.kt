@@ -50,7 +50,9 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
+        supportActionBar?.title="Coinz map"
         pickupbutton= findViewById(R.id.Pickupbutton)
+
         wallet.getwallet()
         Mapbox.getInstance(applicationContext, getString(R.string.access_token))
         mapView =findViewById(R.id.mapView)

@@ -35,7 +35,8 @@
         <activity android:name=".Currency" />
         <activity android:name=".Login" />
         <activity android:name=".Register" />
-        <activity android:name=".Depositcoinz"></activity>
+        <activity android:name=".Depositcoinz">
+        </activity>
     </application>
 
 </manifest>
