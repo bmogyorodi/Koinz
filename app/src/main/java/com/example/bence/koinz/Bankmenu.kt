@@ -3,6 +3,9 @@ package com.example.bence.koinz
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_bankmenu.*
 
 class Bankmenu : AppCompatActivity() {
@@ -35,5 +38,6 @@ private var gold =0
 
 
     }
+
 
 }

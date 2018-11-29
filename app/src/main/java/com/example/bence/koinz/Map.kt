@@ -87,7 +87,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         val markercolor=setting.getString("$i markercolor","000000")
         val longitude= setting.getFloat("$i longitude",0.0F)
         val latitude= setting.getFloat("$i latitude",0.0F)
-         val taken =setting.getBoolean("$i taken",false)
+         val taken =setting.getBoolean("$i Taken",false)
         return Coinz(id,value,currency,markersym, markercolor, latitude, longitude,taken)
     }
 
@@ -180,7 +180,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         if (distance<1000) //later change back to 25
         {
             val selcurr=selected.getcurrency()
-            val value= selected.getvalue()
+            val value= (selected.getvalue()+0.5).toInt()
             pickupbutton.isEnabled=true
             pickupbutton.text=("Pick up $value in $selcurr currency")
             selmarker=marker
@@ -250,7 +250,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         map?.removeMarker(marker)
         val settings=getSharedPreferences(coinzFile,Context.MODE_PRIVATE)
         val editor=settings.edit()
-        editor.putBoolean("$index taken",true)
+        editor.putBoolean("$index Taken",true)
         editor.apply()
         coin.taken()
         wallet.addCoin(coin)
@@ -273,7 +273,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
                 if(!coin.istaken()){
                     val marker=(map?.addMarker(MarkerOptions()
                             .position(LatLng(coin.getlat(), coin.getlong()))
-                            .title("id: "+coin.getid()+"\ncurrency:"+coin.getcurrency()+"\nvalue:"+coin.getvalue().toString())))
+                            .title("id: "+coin.getid()+"\ncurrency:"+coin.getcurrency()+"\nvalue:"+(coin.getvalue()+0.5).toInt().toString())))
                     markers[marker] = coin
                     coinindex[coin.getid()] = i
 

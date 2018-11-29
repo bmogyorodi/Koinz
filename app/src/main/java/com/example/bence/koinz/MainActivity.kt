@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
      private val prefsFile = "MyPrefsFile"
      private val coinzFile= "Coinzfile"
+
     // for storing preferences
      object DownloadCompleteRunner: DownLoadCompleteListener{
         private var result : String? =null
@@ -98,6 +99,7 @@ class MainActivity : AppCompatActivity() {
         else{
             downloadDate=formatted
             downloadgeojson(downloadDate)
+            dailycollect()
             datetag.text = "Files have been updated!"
             Log.d(tag,"Files have been updated")
 
@@ -126,7 +128,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
+        menuInflater.inflate(R.menu.signout, menu)
         return true
     }
 
@@ -134,10 +136,16 @@ class MainActivity : AppCompatActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+        when(item?.itemId){
+            R.id.sign_out->{
+                FirebaseAuth.getInstance().signOut()
+                val intent=Intent(this,Login::class.java)
+                startActivity(intent)
+            }
         }
+        return super.onOptionsItemSelected(item)
+
+
     }
     private fun downloadgeojson(todaydate : String){
         val url ="http://homepages.inf.ed.ac.uk/stg/coinz/$todaydate/coinzmap.geojson"
@@ -152,7 +160,7 @@ class MainActivity : AppCompatActivity() {
         val features=json.getJSONArray("features")
         todayrates(rates)
         todaycoinz(features)
-        Toast.makeText(this,"Update completed!",Toast.LENGTH_SHORT)
+        Log.d(tag,"Update completed!")
 
 
 
@@ -162,6 +170,12 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
+    }
+    private fun dailycollect(){
+        val editor=getSharedPreferences(prefsFile,Context.MODE_PRIVATE).edit()
+        editor.putInt("dailycollect",25)
+        editor.apply()
 
     }
     private fun todayrates(rates: JSONObject){
