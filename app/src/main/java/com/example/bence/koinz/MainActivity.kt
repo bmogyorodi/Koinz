@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+
 import com.google.firebase.auth.FirebaseAuth
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,7 +23,7 @@ import java.time.format.DateTimeFormatter
 class MainActivity : AppCompatActivity() {
 
     private val tag = "Mainactivity"
-    val user = FirebaseAuth.getInstance().currentUser
+    private val user = FirebaseAuth.getInstance().currentUser
 
 
 
@@ -31,6 +32,12 @@ class MainActivity : AppCompatActivity() {
 
      private val prefsFile = "MyPrefsFile"
      private val coinzFile= "Coinzfile"
+     private var daily=25 //amount of coinz user can deposit daily, updated in function daily collect
+     private  var wallet=Wallet()
+     private var depriator=false
+     private var exchangeenabled=true
+     private var extracost=100
+
 
     // for storing preferences
      object DownloadCompleteRunner: DownLoadCompleteListener{
@@ -83,13 +90,13 @@ class MainActivity : AppCompatActivity() {
         if(user==null){
             val intent= Intent( this, Login::class.java)
             startActivity(intent)
-        }
+        } //takes user to login activity in case there is no user logged in
 
         val today = LocalDate.now()
         val formatter= DateTimeFormatter.ofPattern("yyyy/MM/dd")
         val formatted = today.format(formatter)
         val settings= getSharedPreferences(prefsFile, Context.MODE_PRIVATE)
-        downloadDate=settings.getString("lastDownloadDate","")//getting last download date from prefs file/* get last downloaded Jsonfile */
+        downloadDate=settings.getString("lastDownloadDate","")//getting last download date from prefs file
 
         if (downloadDate==formatted){
             datetag.text = "Files are up to date!"
@@ -100,8 +107,11 @@ class MainActivity : AppCompatActivity() {
             downloadDate=formatted
             downloadgeojson(downloadDate)
             dailycollect()
+            dailyconverterdata()
+            wallet.getwallet()
+            depriator=true
             datetag.text = "Files have been updated!"
-            Log.d(tag,"Files have been updated")
+            Log.d(tag,"Files have been updated") // carry out daily updates
 
 
 
@@ -124,6 +134,13 @@ class MainActivity : AppCompatActivity() {
         editor.putString("lastDownloadDate",downloadDate)
 
         editor.apply()
+        //save changes to preference files
+        if(depriator && wallet.size()>0) {
+            Toast.makeText(this,"Quick, deposit your coinz in the bank \n they are losing value every day!",Toast.LENGTH_SHORT)
+            wallet.depriciateWallet()
+            wallet.savewallet()
+        } //depriciating every coin in the wallet by value 1, if the depriator is set to true because it's a new day, and if there is a coin in the wallet
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -136,12 +153,12 @@ class MainActivity : AppCompatActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        when(item?.itemId){
+        when(item.itemId){
             R.id.sign_out->{
                 FirebaseAuth.getInstance().signOut()
                 val intent=Intent(this,Login::class.java)
                 startActivity(intent)
-            }
+            } // adding sign out button, which signs out the user if clicked and redirects to Login activity
         }
         return super.onOptionsItemSelected(item)
 
@@ -152,12 +169,12 @@ class MainActivity : AppCompatActivity() {
 
         val download= DownloadFileTask(DownloadCompleteRunner)
 
-        val geo=download.execute(url).get()
+        val geo=download.execute(url).get() //async download of Jsonfile, setting url to today
 
 
         val json = JSONObject(geo)
         val rates=json.getJSONObject("rates")
-        val features=json.getJSONArray("features")
+        val features=json.getJSONArray("features") //seperate Json file into data on coinz(features) and the rates
         todayrates(rates)
         todaycoinz(features)
         Log.d(tag,"Update completed!")
@@ -174,8 +191,22 @@ class MainActivity : AppCompatActivity() {
     }
     private fun dailycollect(){
         val editor=getSharedPreferences(prefsFile,Context.MODE_PRIVATE).edit()
-        editor.putInt("dailycollect",25)
+        val settings=getSharedPreferences(prefsFile,Context.MODE_PRIVATE)
+        val tier1=settings.getBoolean("dailybonus1",false)
+        val tier2=settings.getBoolean("dailybonus2",false)
+        val tier3=settings.getBoolean("dailybonus3",false) //examine whether bonuses are activated, update daily collectable coinz accordingly
+        if(tier1){
+            daily=30
+            if(tier2){
+                daily=40
+                if(tier3){
+                    daily=50
+                }
+            }
+        }
+        editor.putInt("dailycollect",daily)
         editor.apply()
+        Log.d(tag,"Daily collectable coinz set to: $daily")
 
     }
     private fun todayrates(rates: JSONObject){
@@ -189,7 +220,8 @@ class MainActivity : AppCompatActivity() {
         editor.putFloat("dolrEX",dolr)
         editor.putFloat("quidEX",quid)
         editor.putFloat("penyEX",peny)
-        editor.apply()
+        editor.apply() // editing daily rates in preference file, Floats taken from JSONObject rates
+        Log.d(tag,"Daily rates set: shil $shil, dolr $dolr, quid $quid, peny $peny")
     }
     private fun todaycoinz(features: JSONArray) {
         val settings=getSharedPreferences(coinzFile,Context.MODE_PRIVATE)
@@ -214,11 +246,18 @@ class MainActivity : AppCompatActivity() {
             editor.putString("$i markercolor",markercolor)
             editor.putFloat("$i longitude", longitude.toFloat())
             editor.putFloat("$i latitude", latitude.toFloat())
-            editor.putBoolean("$i Taken", false)
+            editor.putBoolean("$i Taken", false) //storing data on coinz on seperate Coinzfile preference file, names include id space attribute
 
 
 
         }
+        editor.apply()
+
+    }
+    private fun dailyconverterdata(){
+        val editor=getSharedPreferences(prefsFile,Context.MODE_PRIVATE).edit()
+        editor.putInt("extracost",extracost)
+        editor.putBoolean("exisallowed",exchangeenabled)
         editor.apply()
 
     }

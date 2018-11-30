@@ -9,7 +9,7 @@ import java.net.URL
 interface DownLoadCompleteListener {
     fun downloadComplete(result: String)
 }
-
+// code taken from lecture for async download of geojsonfile
 
 class DownloadFileTask(private val caller: DownLoadCompleteListener):
         AsyncTask<String, Void, String> (){
@@ -37,6 +37,7 @@ class DownloadFileTask(private val caller: DownLoadCompleteListener):
         conn.doInput = true
         conn.connect() //Starts query
         return conn.inputStream
+        // downloads input url
     }
 
     override fun onPostExecute(result: String) {

@@ -24,14 +24,15 @@ class Register : AppCompatActivity() {
         register.setOnClickListener{_ ->
             registernewuser()
             val backtomenu=Intent(this,MainActivity::class.java)
-            startActivity(backtomenu)
+            startActivity(backtomenu) //takes user back to main menu after the user created a new account
 
 
 
         }
         backtologin.setOnClickListener{_->
             val intent =Intent( this, Login::class.java)
-            startActivity(intent)
+            intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent) //option to go back to login
 
         }
     }
@@ -46,6 +47,7 @@ class Register : AppCompatActivity() {
         val ref= FirebaseDatabase.getInstance().getReference("users/$uid")
         val user=User(uid,username)
         ref.setValue(user).addOnCompleteListener { Log.d(tag,"Successfully saved username!") }
+        //saves username in real life database
 
     }
     private fun registernewuser(){
@@ -60,12 +62,13 @@ class Register : AppCompatActivity() {
 
             Log.d( tag, "Successfully created user with uid: ${it.result?.user?.uid}" )
             Toast.makeText(this,"Successfully created user with uid: ${it.result?.user?.uid}",Toast.LENGTH_SHORT).show()
-            saveuserName()
+            saveuserName() //display message on successful registration
 
         }.addOnFailureListener {
             Log.d(tag, "Failed to create user: ${it.message}")
             Toast.makeText(this,"Failed to create user: ${it.message}",Toast.LENGTH_SHORT).show()
+            //display message on unsuccessful registration with appropriate error message
         }
     }
 }
-class User(val uid:String,val username:String)
+class User(val uid:String,val username:String) // Create for the data structure to be saved in the database

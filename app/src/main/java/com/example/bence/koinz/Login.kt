@@ -6,8 +6,6 @@ import android.content.Intent
 import android.widget.Toast
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_login.*
 
 class Login : AppCompatActivity() {
@@ -32,10 +30,12 @@ class Login : AppCompatActivity() {
                         Toast.makeText(this,"Successfully logged in user with uid: ${it.result?.user?.uid}",Toast.LENGTH_SHORT).show()
                         val backtomain=Intent(this,MainActivity::class.java)
                         startActivity(backtomain)
+                        // shows a message saying the login was successful and returns user to mainactivity
                     }
                     .addOnFailureListener {
                         Log.d(tag, "Failed to sign in user: ${it.message}")
                         Toast.makeText(this,"Failed to sign in user: ${it.message}",Toast.LENGTH_SHORT).show()
+                        //give appropriate error message if login fails
                     }
 
 
@@ -46,7 +46,9 @@ class Login : AppCompatActivity() {
 
         toregister.setOnClickListener{_ ->
             val intent =Intent( this, Register::class.java)
+            intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
+            //takes user to register activity, in case the user has no setup account
 
         }
 }

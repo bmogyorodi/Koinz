@@ -1,8 +1,14 @@
 package com.example.bence.koinz
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_depositcoinz.*
 
@@ -14,15 +20,14 @@ class Depositcoinz : AppCompatActivity() {
     private var quid = 0
     private val tag = "meltcoinz"
     private val prefs = "MyPrefsFile"
-    private val coinzFile = "Coinzfile"
     private var displayindex = 1
     private var dailycollect=25
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_depositcoinz)
-        wallet.getwallet()
-        updatedisplay()
+        wallet.getwallet() // get wallet from database
+
 
 
 
@@ -41,8 +46,9 @@ class Depositcoinz : AppCompatActivity() {
             }
 
 
-        }
+        } // updates the coin displayed on the screen (moving the index in the wallet), displaying currency and value
         discard.setOnClickListener{_->
+            //button removes coin from wallet, sets the displayindex back in case it was on the last index so the displayindex won't get out of bound
             if(wallet.size()!=0){
             if(displayindex==wallet.size()) {
 
@@ -52,6 +58,7 @@ class Depositcoinz : AppCompatActivity() {
                     wallet.removeCoin(coin)
                     displayindex--
                     updatedisplay()
+                    Log.d(tag,"Coin discarded ${coin.getid()}")
                 }
             }
             else{
@@ -59,14 +66,19 @@ class Depositcoinz : AppCompatActivity() {
                 if (coin != null) {
                     wallet.removeCoin(coin)
                     updatedisplay()
+                    Log.d(tag,"Coin discarded ${coin.getid()}")
                 }
 
-            }}
+            }
+            savechanges()
+            }
             else{
                 Toast.makeText(this,"You don't have coinz!",Toast.LENGTH_SHORT).show()
             }
         }
         deposit.setOnClickListener{_->
+            // does the same as discard, but also uses the cointocurrency function to add to the treasure of the user
+            // checks dailycollect to check if the user can deposit coinz today, also decreases the variable by one after a deposit
             if(dailycollect!=0){
             if(wallet.size()!=0){
             val coin = wallet.getCoin(displayindex - 1)
@@ -81,6 +93,7 @@ class Depositcoinz : AppCompatActivity() {
                     dailycollect--
                     displayindex--
                     updatedisplay()
+                    Log.d(tag,"Coin deposited ${coin.getid()}")
                 }
             }
             else{
@@ -89,14 +102,26 @@ class Depositcoinz : AppCompatActivity() {
                     cointocurrecy(coin)
                     dailycollect--
                     updatedisplay()
+                    Log.d(tag,"Coin deposited ${coin.getid()}")
                 }
 
-            }}else{
+            }
+             savechanges()
+            }else{
                 Toast.makeText(this,"You don't have coinz to deposit!",Toast.LENGTH_SHORT).show()
             }}else{
                 Toast.makeText(this,"You can't deposit more coinz today!",Toast.LENGTH_SHORT).show()
+                //warning message if the deposit limit is reached
             }
 
+
+        }
+        buttonopenwallet.setOnClickListener { _->
+            stepback.visibility= View.VISIBLE
+            stepfoward.visibility=View.VISIBLE
+            coindisplay.visibility=View.VISIBLE
+            buttonopenwallet.visibility=View.INVISIBLE
+            updatedisplay()
         }
 
 
@@ -116,6 +141,7 @@ class Depositcoinz : AppCompatActivity() {
         shil = settings.getInt("shilNum", 0)
         dolr = settings.getInt("dolrNum", 0)
         dailycollect=settings.getInt("dailycollect",25)
+        // gets current currencies held by user to modify and the amount of coinz they can collect today
 
 
 
@@ -125,17 +151,11 @@ class Depositcoinz : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        val editor=getSharedPreferences(prefs,Context.MODE_PRIVATE).edit()
-
-        editor.putInt("penyNum",peny)
-        editor.putInt("quidNum",quid)
-        editor.putInt("shilNum",shil)
-        editor.putInt("dolrNum",dolr)
-        editor.putInt("dailycollect",dailycollect)
-        editor.apply()
-        wallet.savewallet()
+        savechanges()
+        //saves content of wallet and new currency numbers held by user, and daily collectable coinz
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updatedisplay() {
         if(wallet.size()==0){
             coindisplay.text="Wallet is empty!"
@@ -147,7 +167,8 @@ class Depositcoinz : AppCompatActivity() {
             val value = (coin.getvalue()+0.5).toInt()
             coindisplay.text = "Coin #$displayindex currency:$curr, value:$value"
 
-        }}
+
+        }} //updates the values on the coin which is shown in the wallet with index, currency and value, called everytime the index is modified
     }
     private fun cointocurrecy(coin:Coinz){
         if(coin.getcurrency()=="DOLR")
@@ -166,6 +187,45 @@ class Depositcoinz : AppCompatActivity() {
         {
             peny=(peny+coin.getvalue()+0.5).toInt()
         }
+        //adds coin value to the right currency variable based coin currency attribute
+    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.wallet_menu, menu)
+        return true
+    }
+    private fun savechanges(){
+        val editor=getSharedPreferences(prefs,Context.MODE_PRIVATE).edit()
+
+        editor.putInt("penyNum",peny)
+        editor.putInt("quidNum",quid)
+        editor.putInt("shilNum",shil)
+        editor.putInt("dolrNum",dolr)
+        editor.putInt("dailycollect",dailycollect)
+        editor.apply()
+        wallet.savewallet()
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        when(item.itemId){
+            R.id.toMap->{
+                val intent= Intent(this,Map::class.java)
+                intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+            R.id.backtomenu->{
+                val intent= Intent(this,Bankmenu::class.java)
+                intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+
+
     }
 
 

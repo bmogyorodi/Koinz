@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_bankmenu.*
 
 class Bankmenu : AppCompatActivity() {
 
-private var gold =0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportActionBar?.title="Bankmenu"
@@ -28,17 +28,27 @@ private var gold =0
         }
 
     }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.backto_menu, menu)
+        return true
+    }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        when(item.itemId){
+            R.id.backtomenu->{
+                val intent=Intent(this,MainActivity::class.java)
+                startActivity(intent)
+            } // adding sign out button, which signs out the user if clicked and redirects to Login activity
+        }
+        return super.onOptionsItemSelected(item)
 
 
     }
-    override fun onStop(){
-        super.onStop()
 
-
-    }
 
 
 }

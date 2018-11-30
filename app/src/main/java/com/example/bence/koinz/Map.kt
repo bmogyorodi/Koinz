@@ -1,10 +1,14 @@
 package com.example.bence.koinz
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.Toast
 import android.widget.Toast.*
@@ -40,13 +44,20 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
     private lateinit var locationLayerPlugin: LocationLayerPlugin
 
     private val coinzFile= "Coinzfile"
+    private val bonusprefs="MyPrefsFile"
     private val tag="Mapview"
     private val markers=HashMap<Marker?,Coinz>(50)
     private val coinindex=HashMap<String,Int>(50)
     private val wallet= Wallet()
+    private var radius=25
+    private var shilx=0.0
+    private var dolrx=0.0
+    private var penyx=0.0
+    private var quidx=0.0
 
 
 
+    @SuppressLint("ShowToast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -54,32 +65,23 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         pickupbutton= findViewById(R.id.Pickupbutton)
 
         wallet.getwallet()
-        Mapbox.getInstance(applicationContext, getString(R.string.access_token))
+        Mapbox.getInstance(applicationContext, getString(R.string.access_token)) //getting mapbox map with provided token
         mapView =findViewById(R.id.mapView)
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
         pickupbutton.setOnClickListener{_->
+            if(!wallet.isfull()){
+
+
             pickupcoin(selmarker)
-            pickupbutton.isEnabled=false
+            pickupbutton.isEnabled=false}
+            else{
+                Toast.makeText(this,"Wallet is full!",Toast.LENGTH_SHORT)
+            }
+            //picks up selected coin and disables the button again
 
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         private fun getdailycoin(i: Int):Coinz{
         val setting =getSharedPreferences(coinzFile, Context.MODE_PRIVATE)
         val id=setting.getString("$i id","missingid")
@@ -91,6 +93,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         val latitude= setting.getFloat("$i latitude",0.0F)
          val taken =setting.getBoolean("$i Taken",false)
         return Coinz(id,value,currency,markersym, markercolor, latitude, longitude,taken)
+            //returns a coin from the set of daily coinz using an index
     }
 
     private fun enableLocation(){
@@ -114,16 +117,16 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         locationEngine.interval=5000
         locationEngine.priority= LocationEnginePriority.HIGH_ACCURACY
         locationEngine.activate()
-        Log.d(tag,"Init location engine")
+        Log.d(tag,"Init location engine") //set location engine which finds userlocation
 
         val lastlocation =locationEngine.lastLocation
         if (lastlocation != null){
             originLocation=lastlocation
             setCameraPosition(lastlocation)
-            Log.d(tag,"New location set")
+            Log.d(tag,"New location set") //sets new user location
         } else {
-            locationEngine.addLocationEngineListener(this)
-            Log.d(tag,"No new location!")
+            locationEngine.addLocationEngineListener(this) //waits for user location input
+            Log.d(tag,"No new location yet!")
         }
     }
     @SuppressWarnings("MissingPermission")
@@ -136,14 +139,14 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
                 locationLayerPlugin.setLocationLayerEnabled(true)
                 locationLayerPlugin.cameraMode=CameraMode.TRACKING
                 locationLayerPlugin.renderMode=RenderMode.NORMAL
-                Log.d(tag,"Locationlayer init")
+                Log.d(tag,"Locationlayer initialized") //sets locationlayer
             }
         }
 
     }
     private fun setCameraPosition(location: Location){
         map?.animateCamera(CameraUpdateFactory.newLatLng(
-                LatLng(location.latitude, location.longitude)))
+                LatLng(location.latitude, location.longitude))) //setting camera position
 
     }
 
@@ -153,12 +156,14 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
 
     override fun onPermissionResult(granted: Boolean) {
         Log.d(tag,"[onPermissionResult] granted==$granted")
-         if (granted){enableLocation()}
+         if (granted){enableLocation()} //enable location when permission is granted
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
+
+
 
 
 
@@ -169,22 +174,24 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
              originLocation=location
              setCameraPosition(originLocation)
          }
+        //keep changing locations
 
     }
     override fun onMarkerClick(marker: Marker): Boolean {
+        //set up marker on click command
 
        Log.d(tag, "Markerclick registered")
 
-        val selected=markers.getValue(marker)
+        val selected=markers.getValue(marker) //get coin by accessing it from marker-coin hashmap
 
 
-        val distance=marker.position.distanceTo(LatLng(originLocation))
-        if (distance<1000) //later change back to 25
+        val distance=marker.position.distanceTo(LatLng(originLocation)) //measure distance between selected marker and position of user
+        if (distance<radius)
         {
             val selcurr=selected.getcurrency()
-            val value= (selected.getvalue()+0.5).toInt()
+            val value= (selected.getvalue()+0.5).toInt() //rounds up value to the closest integer
             pickupbutton.isEnabled=true
-            pickupbutton.text=("Pick up $value in $selcurr currency")
+            pickupbutton.text=("Pick up $value in $selcurr currency") //display value and currency of selected coin
             selmarker=marker
 
 
@@ -193,7 +200,8 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         }
         else{
             Log.d(tag,"Disatance is: $distance")
-            makeText(this,"Distance is $distance",Toast.LENGTH_SHORT).show()
+            makeText(this,"Distance is $distance \n coin is too far",Toast.LENGTH_SHORT).show()
+            //if the marker is too far to be selected then the distance is displayed
         }
         return true
     }
@@ -208,6 +216,8 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
     override fun onStart() {
         super.onStart()
         mapView?.onStart()
+        updateradius()
+        updaterates()
 
     }
 
@@ -223,6 +233,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
 
     override fun onStop() {
         super.onStop()
+
         locationEngine.removeLocationUpdates()
         locationLayerPlugin.onStop()
         mapView?.onStop()
@@ -232,6 +243,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
     override fun onDestroy() {
         super.onDestroy()
         mapView?.onDestroy()
+
         locationEngine.deactivate()
 
     }
@@ -256,7 +268,25 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         editor.apply()
         coin.taken()
         wallet.addCoin(coin)
+        wallet.savewallet()//adds coin to the wallet after the pickup button is pushed, rewrites taken boolean of coin to be true, so it won't be displayed on the map anymore
 
+    }
+    private fun updateradius(){
+        val settings=getSharedPreferences(bonusprefs, Context.MODE_PRIVATE)
+        val tier1=settings.getBoolean("radius1",false)
+        val tier2=settings.getBoolean("radius2",false)
+        val tier3=settings.getBoolean("radius3",false)
+        if(tier1){
+            radius=40
+            if(tier2){
+                radius=65
+                if(tier3){
+                    radius=100
+                }
+            }
+        }
+        Log.d(tag,"Radius set to $radius")
+        //updates radius, which is the distance allowed between the user and marker when selected for pickup. Changes the variable based on what bonuses were purchased.
     }
     override fun onMapReady(mapboxMap: MapboxMap?){
         if (mapboxMap==null)
@@ -276,13 +306,51 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
                     val marker=(map?.addMarker(MarkerOptions()
                             .position(LatLng(coin.getlat(), coin.getlong()))
                             .title("id: "+coin.getid()+"\ncurrency:"+coin.getcurrency()+"\nvalue:"+(coin.getvalue()+0.5).toInt().toString())))
-                    markers[marker] = coin
-                    coinindex[coin.getid()] = i
+                    markers[marker] = coin // marker is connected to it's coin by hashmap
+                    coinindex[coin.getid()] = i // coin id is connected to index by hashmap
 
-                }}
+                }} //puts all 50 marker on the map for the 50 coinz connecting them with hashmap
             Log.d(tag,"Markers placed on map.")
-            map?.setOnMarkerClickListener(this)
+            map?.setOnMarkerClickListener(this) //activating markers on click functions
                     }
+    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.map_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        when(item.itemId){
+            R.id.toWallet->{
+                val intent= Intent(this,Depositcoinz::class.java)
+                intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+            R.id.showrates->{
+                val exchange="Exchange rates: \n Peny: $penyx \n Quid: $quidx \n Shil: $shilx \n Dolr: $dolrx"
+                Toast.makeText(this,exchange,5).show()
+
+            }
+            R.id.backtomenu->{
+                val intent= Intent(this,MainActivity::class.java)
+                intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+
+
+    }
+    private fun updaterates(){
+        val settings=getSharedPreferences(bonusprefs, Context.MODE_PRIVATE)
+        penyx= settings.getFloat("penyEX", 10F).toDouble()
+        quidx= settings.getFloat("quidEX", 10F).toDouble()
+        shilx= settings.getFloat("shilEX", 10F).toDouble()
+        dolrx= settings.getFloat("dolrEX", 10F).toDouble()
     }
 
 
