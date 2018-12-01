@@ -155,6 +155,7 @@ class Currency : AppCompatActivity() {
 
         }
         buynewexchange.setOnClickListener { _->
+
             if(gold>extracost){
             gold-=extracost
             exchangeenabled=true

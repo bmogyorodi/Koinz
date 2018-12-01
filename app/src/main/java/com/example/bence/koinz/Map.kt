@@ -63,7 +63,6 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         setContentView(R.layout.activity_map)
         supportActionBar?.title="Coinz map"
         pickupbutton= findViewById(R.id.Pickupbutton)
-
         wallet.getwallet()
         Mapbox.getInstance(applicationContext, getString(R.string.access_token)) //getting mapbox map with provided token
         mapView =findViewById(R.id.mapView)

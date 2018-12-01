@@ -11,64 +11,73 @@
         android:id="@+id/uppeny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="35dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/upquid"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView4"
+        app:layout_constraintEnd_toStartOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="@+id/textView4"
         app:srcCompat="@android:drawable/arrow_up_float" />
 
     <ImageButton
         android:id="@+id/upquid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="23dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/upshil"
         app:layout_constraintEnd_toStartOf="@+id/upshil"
-        app:layout_constraintStart_toEndOf="@+id/uppeny"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/textView11"
         app:srcCompat="@android:drawable/arrow_up_float" />
 
     <Button
         android:id="@+id/exchange"
-        android:layout_width="0dp"
+        android:layout_width="369dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="Exchange"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/buynewexchange"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/buynewexchange" />
 
     <ImageButton
         android:id="@+id/upshil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="7dp"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/conshil"
-        app:layout_constraintEnd_toStartOf="@+id/updolr"
-        app:layout_constraintStart_toEndOf="@+id/upquid"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/uppeny"
+        app:layout_constraintEnd_toStartOf="@+id/uppeny"
+        app:layout_constraintTop_toTopOf="@+id/uppeny"
         app:srcCompat="@android:drawable/arrow_up_float" />
 
     <ImageButton
         android:id="@+id/updolr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="17dp"
-        app:layout_constraintBottom_toBottomOf="@+id/upshil"
-        app:layout_constraintEnd_toStartOf="@+id/textView4"
-        app:layout_constraintStart_toEndOf="@+id/upshil"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/upquid"
+        app:layout_constraintEnd_toStartOf="@+id/upquid"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView10"
         app:srcCompat="@android:drawable/arrow_up_float" />
 
     <ImageButton
         android:id="@+id/downpeny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/conpeny"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="@+id/conpeny"
         app:layout_constraintTop_toBottomOf="@+id/conpeny"
         app:srcCompat="@android:drawable/arrow_down_float" />
 
@@ -76,29 +85,35 @@
         android:id="@+id/downshil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:layout_marginEnd="22dp"
-        app:layout_constraintBottom_toBottomOf="@+id/downdolr"
-        app:layout_constraintEnd_toStartOf="@+id/downdolr"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/conshil"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="@+id/conshil"
+        app:layout_constraintTop_toBottomOf="@+id/conshil"
         app:srcCompat="@android:drawable/arrow_down_float" />
 
     <ImageButton
         android:id="@+id/downdolr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="27dp"
-        app:layout_constraintBottom_toTopOf="@+id/exchange"
-        app:layout_constraintEnd_toEndOf="@+id/updolr"
-        app:layout_constraintStart_toStartOf="@+id/updolr"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/condolr"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="@+id/condolr"
+        app:layout_constraintTop_toBottomOf="@+id/condolr"
         app:srcCompat="@android:drawable/arrow_down_float" />
 
     <ImageButton
         android:id="@+id/downquid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="14dp"
-        app:layout_constraintEnd_toStartOf="@+id/downshil"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/conquid"
+        app:layout_constraintHorizontal_bias="0.388"
+        app:layout_constraintStart_toStartOf="@+id/conquid"
         app:layout_constraintTop_toBottomOf="@+id/conquid"
         app:srcCompat="@android:drawable/arrow_down_float" />
 
@@ -106,41 +121,47 @@
         android:id="@+id/conpeny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="9dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="0"
+        app:layout_constraintEnd_toEndOf="@+id/uppeny"
         app:layout_constraintStart_toStartOf="@+id/uppeny"
         app:layout_constraintTop_toBottomOf="@+id/uppeny" />
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="0dp"
+        android:layout_width="101dp"
         android:layout_height="35dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="150dp"
         android:text="Added Gold"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/updolr"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/updolr"
-        app:layout_constraintTop_toTopOf="@+id/updolr" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/goldfromex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="37dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="0000"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textView4"
+        app:layout_constraintStart_toStartOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/conquid"
-        android:layout_width="wrap_content"
+        android:layout_width="12dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="9dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="0"
+        app:layout_constraintEnd_toEndOf="@+id/upquid"
         app:layout_constraintStart_toStartOf="@+id/upquid"
         app:layout_constraintTop_toBottomOf="@+id/upquid" />
 
@@ -148,83 +169,83 @@
         android:id="@+id/conshil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="0"
-        app:layout_constraintBottom_toTopOf="@+id/downshil"
-        app:layout_constraintEnd_toEndOf="@+id/upshil" />
+        app:layout_constraintEnd_toEndOf="@+id/upshil"
+        app:layout_constraintStart_toStartOf="@+id/upshil"
+        app:layout_constraintTop_toBottomOf="@+id/upshil" />
 
     <TextView
         android:id="@+id/condolr"
         android:layout_width="wrap_content"
         android:layout_height="17dp"
-        android:layout_marginBottom="45dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="0"
-        app:layout_constraintBottom_toBottomOf="@+id/downshil"
+        app:layout_constraintEnd_toEndOf="@+id/updolr"
         app:layout_constraintStart_toStartOf="@+id/updolr"
-        app:layout_constraintTop_toTopOf="@+id/updolr" />
+        app:layout_constraintTop_toBottomOf="@+id/updolr" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:text="Peny"
+        android:textAlignment="textStart"
         app:layout_constraintBottom_toTopOf="@+id/uppeny"
-        app:layout_constraintEnd_toEndOf="@+id/uppeny" />
+        app:layout_constraintEnd_toEndOf="@+id/uppeny"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/uppeny" />
 
     <TextView
         android:id="@+id/textView10"
-        android:layout_width="39dp"
-        android:layout_height="23dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="89dp"
-        android:layout_marginStart="89dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:text="Quid"
-        app:layout_constraintBottom_toTopOf="@+id/upshil"
-        app:layout_constraintEnd_toStartOf="@+id/updolr"
-        app:layout_constraintStart_toEndOf="@+id/group" />
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/upquid"
+        app:layout_constraintEnd_toEndOf="@+id/upquid"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/upquid" />
 
     <TextView
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:text="Shil"
+        android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/upshil"
-        app:layout_constraintEnd_toEndOf="@+id/upshil" />
+        app:layout_constraintEnd_toEndOf="@+id/upshil"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/upshil" />
 
     <TextView
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:text="Dolr"
-        app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
-        app:layout_constraintEnd_toEndOf="@+id/updolr" />
-
-    <android.support.constraint.Group
-        android:id="@+id/group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <android.support.constraint.Group
-        android:id="@+id/group2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/updolr"
+        app:layout_constraintEnd_toEndOf="@+id/updolr"
+        app:layout_constraintStart_toStartOf="@+id/updolr" />
 
     <TextView
         android:id="@+id/treasury"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="missingval"
         app:layout_constraintEnd_toEndOf="parent"
@@ -235,22 +256,20 @@
         android:id="@+id/exrate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="1dp"
+        android:layout_marginEnd="8dp"
         android:text="missingex"
         app:layout_constraintEnd_toEndOf="@+id/treasury"
+        app:layout_constraintStart_toStartOf="@+id/treasury"
         app:layout_constraintTop_toBottomOf="@+id/treasury" />
 
     <Button
         android:id="@+id/buynewexchange"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:enabled="false"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

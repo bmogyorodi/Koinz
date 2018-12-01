@@ -9,9 +9,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-
 import com.google.firebase.auth.FirebaseAuth
-
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -70,7 +68,7 @@ class MainActivity : AppCompatActivity() {
 
         } //takes user to bonuses activity
         friendsbutton.setOnClickListener{_ ->
-            val intent= Intent( this, Login::class.java)
+            val intent= Intent( this, Friends::class.java)
             startActivity(intent)
         } // takes user to friends activity
 
