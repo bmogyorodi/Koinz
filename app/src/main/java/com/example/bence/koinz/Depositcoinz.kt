@@ -50,26 +50,19 @@ class Depositcoinz : AppCompatActivity() {
         discard.setOnClickListener{_->
             //button removes coin from wallet, sets the displayindex back in case it was on the last index so the displayindex won't get out of bound
             if(wallet.size()!=0){
-            if(displayindex==wallet.size()) {
+
 
 
                 val coin = wallet.getCoin(displayindex - 1)
                 if (coin != null) {
                     wallet.removeCoin(coin)
-                    displayindex--
-                    updatedisplay()
-                    Log.d(tag,"Coin discarded ${coin.getid()}")
-                }
-            }
-            else{
-                val coin = wallet.getCoin(displayindex - 1)
-                if (coin != null) {
-                    wallet.removeCoin(coin)
+                    if(wallet.size()+1==displayindex){displayindex--}
                     updatedisplay()
                     Log.d(tag,"Coin discarded ${coin.getid()}")
                 }
 
-            }
+
+
             savechanges()
             }
             else{
@@ -91,7 +84,7 @@ class Depositcoinz : AppCompatActivity() {
                     wallet.removeCoin(coin)
                     cointocurrecy(coin)
                     dailycollect--
-                    if (displayindex==wallet.size()){displayindex--}
+                    if (displayindex==wallet.size()+1){displayindex--}
                     updatedisplay()
                     Log.d(tag,"Coin deposited ${coin.getid()}")
                 }

@@ -6,20 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.bence.koinz.Friends">
 
-    <EditText
-        android:id="@+id/writetargetid"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:ems="10"
-        android:hint="Enter name of friend here"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonsendcoin"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <ImageButton
         android:id="@+id/stepbackfriend"
         android:layout_width="wrap_content"
@@ -73,13 +59,16 @@
 
     <Button
         android:id="@+id/buttonsendcoin"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:enabled="false"
         android:text="send coin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/nextfriend"
@@ -89,7 +78,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:rotation="90"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="@+id/buttonwalletfriend"
         app:layout_constraintStart_toEndOf="@+id/coindisplayfriend"
         app:layout_constraintTop_toBottomOf="@+id/stepfowardfriend"
@@ -103,7 +92,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:rotation="90"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintEnd_toStartOf="@+id/coindisplayfriend"
         app:layout_constraintStart_toStartOf="@+id/buttonwalletfriend"
         app:layout_constraintTop_toBottomOf="@+id/stepbackfriend"
@@ -115,23 +104,25 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:text="Friend"
-        android:visibility="invisible"
+        android:textSize="17sp"
+        android:visibility="visible"
         app:layout_constraintEnd_toStartOf="@+id/nextfriend"
         app:layout_constraintStart_toEndOf="@+id/prevfriend"
-        app:layout_constraintTop_toTopOf="@+id/accessfriend" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonwalletfriend" />
 
     <Button
-        android:id="@+id/accessfriend"
+        android:id="@+id/buttonCollector"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Access friend list"
+        android:enabled="false"
+        android:text="No coinz from friends"
+        app:layout_constraintBottom_toTopOf="@+id/buttonsendcoin"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonwalletfriend" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

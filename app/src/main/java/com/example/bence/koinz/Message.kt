@@ -16,3 +16,6 @@ class Message constructor( val id:String, val fromid:String, val toid:String, va
 
 
 }
+class FriendRequest constructor(val id: String,val fromid: String,val fromname:String,val toid: String){
+    constructor():this("","","","")
+}
