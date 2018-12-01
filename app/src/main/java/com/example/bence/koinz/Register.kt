@@ -71,4 +71,6 @@ class Register : AppCompatActivity() {
         }
     }
 }
-class User(val uid:String,val username:String) // Create for the data structure to be saved in the database
+class User(val uid:String,val username:String){
+    constructor():this("","")
+} // Create for the data structure to be saved in the database

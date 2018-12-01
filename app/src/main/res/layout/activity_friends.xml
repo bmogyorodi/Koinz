@@ -80,4 +80,58 @@
         android:text="send coin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+        android:id="@+id/nextfriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:rotation="90"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/buttonwalletfriend"
+        app:layout_constraintStart_toEndOf="@+id/coindisplayfriend"
+        app:layout_constraintTop_toBottomOf="@+id/stepfowardfriend"
+        app:srcCompat="@android:drawable/arrow_up_float" />
+
+    <ImageButton
+        android:id="@+id/prevfriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:rotation="90"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/coindisplayfriend"
+        app:layout_constraintStart_toStartOf="@+id/buttonwalletfriend"
+        app:layout_constraintTop_toBottomOf="@+id/stepbackfriend"
+        app:srcCompat="@android:drawable/arrow_down_float" />
+
+    <TextView
+        android:id="@+id/friendondisplay"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:text="Friend"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/nextfriend"
+        app:layout_constraintStart_toEndOf="@+id/prevfriend"
+        app:layout_constraintTop_toTopOf="@+id/accessfriend" />
+
+    <Button
+        android:id="@+id/accessfriend"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Access friend list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonwalletfriend" />
+
 </android.support.constraint.ConstraintLayout>

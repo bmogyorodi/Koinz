@@ -4,8 +4,11 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
-class Message constructor(private val id:String,private val fromid:String,private val toid:String,private val coin: Coinz) {
+class Message constructor( val id:String, val fromid:String, val toid:String, val coin: Coinz) {
     constructor():this("","","",coin=Coinz())
+
+
+
 
 
 

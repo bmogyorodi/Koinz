@@ -82,7 +82,7 @@ class Depositcoinz : AppCompatActivity() {
             if(dailycollect!=0){
             if(wallet.size()!=0){
             val coin = wallet.getCoin(displayindex - 1)
-            if(displayindex==wallet.size()) {
+
 
 
 
@@ -91,21 +91,12 @@ class Depositcoinz : AppCompatActivity() {
                     wallet.removeCoin(coin)
                     cointocurrecy(coin)
                     dailycollect--
-                    displayindex--
-                    updatedisplay()
-                    Log.d(tag,"Coin deposited ${coin.getid()}")
-                }
-            }
-            else{
-                if (coin != null) {
-                    wallet.removeCoin(coin)
-                    cointocurrecy(coin)
-                    dailycollect--
+                    if (displayindex==wallet.size()){displayindex--}
                     updatedisplay()
                     Log.d(tag,"Coin deposited ${coin.getid()}")
                 }
 
-            }
+
              savechanges()
             }else{
                 Toast.makeText(this,"You don't have coinz to deposit!",Toast.LENGTH_SHORT).show()
