@@ -41,6 +41,7 @@ class Bankmenu : AppCompatActivity() {
         when(item.itemId){
             R.id.backtomenu->{
                 val intent=Intent(this,MainActivity::class.java)
+                intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             } // adding sign out button, which signs out the user if clicked and redirects to Login activity
         }

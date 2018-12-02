@@ -34,6 +34,8 @@ class Wallet constructor (private val capacity:Int=50 ) {
         else{return null}
         //removes coin from wallet and returns it
     }
+
+
     fun getCoin(index:Int):Coinz?{
         if(!(coins.size>index)){
             return null

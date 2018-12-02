@@ -83,13 +83,13 @@
         android:layout_marginStart="8dp"
         android:text="@string/friends"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/datetag"
+        app:layout_constraintBottom_toTopOf="@+id/logintag"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bonuses" />
 
     <TextView
-        android:id="@+id/datetag"
+        android:id="@+id/logintag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="7dp"

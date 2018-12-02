@@ -44,6 +44,12 @@ class Coinz constructor(private val id: String, private var value: Float, privat
             this.value=0F
         }
     }
+    override fun equals(other: Any?): Boolean {
+        if(other is Coinz){
+            return this.getid()==other.getid()
+        }
+        return false
+    }
 
 
 

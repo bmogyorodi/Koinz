@@ -73,4 +73,11 @@ class Register : AppCompatActivity() {
 }
 class User(val uid:String,val username:String){
     constructor():this("","")
+
+    override fun equals(other: Any?): Boolean {
+        if (other is User){
+          return this.uid==other.uid
+        }
+        return false
+    }
 } // Create for the data structure to be saved in the database

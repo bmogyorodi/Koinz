@@ -10,6 +10,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -22,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     private val tag = "Mainactivity"
     private val user = FirebaseAuth.getInstance().currentUser
+    private val useruid=user?.uid?:""
 
 
 
@@ -83,21 +88,24 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
 
         super.onStart()
-
-
-        if(user==null){
-            val intent= Intent( this, Login::class.java)
-            startActivity(intent)
-        } //takes user to login activity in case there is no user logged in
-
+        fetchCurUser()
         val today = LocalDate.now()
         val formatter= DateTimeFormatter.ofPattern("yyyy/MM/dd")
         val formatted = today.format(formatter)
         val settings= getSharedPreferences(prefsFile, Context.MODE_PRIVATE)
         downloadDate=settings.getString("lastDownloadDate","")//getting last download date from prefs file
 
+
+        if(user==null){
+            val intent= Intent( this, Login::class.java)
+            intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        } //takes user to login activity in case there is no user logged in
+
+
+
         if (downloadDate==formatted){
-            datetag.text = "Files are up to date!"
+
             Log.d(tag,"Files are up to date!")
 
         }
@@ -108,7 +116,7 @@ class MainActivity : AppCompatActivity() {
             dailyconverterdata()
             wallet.getwallet()
             depriator=true
-            datetag.text = "Files have been updated!"
+
             Log.d(tag,"Files have been updated") // carry out daily updates
 
 
@@ -155,6 +163,7 @@ class MainActivity : AppCompatActivity() {
             R.id.sign_out->{
                 FirebaseAuth.getInstance().signOut()
                 val intent=Intent(this,Login::class.java)
+                intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             } // adding sign out button, which signs out the user if clicked and redirects to Login activity
         }
@@ -259,5 +268,30 @@ class MainActivity : AppCompatActivity() {
         editor.apply()
 
     }
+    private fun fetchCurUser(){
 
+        val ref = FirebaseDatabase.getInstance().getReference("/users")
+
+        ref.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                p0.children.forEach{
+                    Log.d(tag,"User added to the list!, ${it.toString()}")
+                    val user=it.getValue(User::class.java)!!
+                    if(useruid==user.uid){
+                        logintag.text="Logged in as: ${user.username}"
+
+                    }
+
+
+                    }
+
+
+                }
+            })
+
+}
 }

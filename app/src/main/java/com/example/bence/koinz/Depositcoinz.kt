@@ -56,7 +56,7 @@ class Depositcoinz : AppCompatActivity() {
                 val coin = wallet.getCoin(displayindex - 1)
                 if (coin != null) {
                     wallet.removeCoin(coin)
-                    if(wallet.size()+1==displayindex){displayindex--}
+                    if(wallet.size()+1==displayindex && displayindex!=1){displayindex--}
                     updatedisplay()
                     Log.d(tag,"Coin discarded ${coin.getid()}")
                 }
@@ -84,7 +84,7 @@ class Depositcoinz : AppCompatActivity() {
                     wallet.removeCoin(coin)
                     cointocurrecy(coin)
                     dailycollect--
-                    if (displayindex==wallet.size()+1){displayindex--}
+                    if (displayindex==wallet.size()+1 && displayindex!=1){displayindex--}
                     updatedisplay()
                     Log.d(tag,"Coin deposited ${coin.getid()}")
                 }
