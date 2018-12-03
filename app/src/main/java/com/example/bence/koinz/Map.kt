@@ -61,7 +61,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
-        supportActionBar?.title="Coinz map"
+        supportActionBar?.title="Coinz Map"
         pickupbutton= findViewById(R.id.Pickupbutton)
         wallet.getwallet()
         Mapbox.getInstance(applicationContext, getString(R.string.access_token)) //getting mapbox map with provided token
@@ -86,12 +86,10 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         val id=setting.getString("$i id","missingid")
         val value=setting.getFloat("$i value", 0.0F)
         val currency= setting.getString("$i currency","missingcurr")
-        val markersym=setting.getInt("$i markersym",0)
-        val markercolor=setting.getString("$i markercolor","000000")
         val longitude= setting.getFloat("$i longitude",0.0F)
         val latitude= setting.getFloat("$i latitude",0.0F)
          val taken =setting.getBoolean("$i Taken",false)
-        return Coinz(id,value,currency,markersym, markercolor, latitude, longitude,taken)
+        return Coinz(id,value,currency, latitude, longitude,taken)
             //returns a coin from the set of daily coinz using an index
     }
 

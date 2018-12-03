@@ -16,7 +16,6 @@ import com.google.firebase.database.*
 class Friends : AppCompatActivity() {
     private var wallet = Wallet()
     private var friendList = ArrayList<User>()
-    private var alluser=ArrayList<User>()
     private val tag = "Friends"
     private var displayindex = 1
     private var friendindex=1
@@ -91,7 +90,7 @@ class Friends : AppCompatActivity() {
             val fromid=currentuser.uid
                 val fromname=currentuser.username
 
-            val toid=friendList.get(friendindex-1).uid
+            val toid=friendList[friendindex-1].uid
             val ref= FirebaseDatabase.getInstance().getReference("messages/$toid").push()
             val key=ref.key
 
@@ -108,8 +107,8 @@ class Friends : AppCompatActivity() {
                 wallet.savewallet()
                 if (displayindex==wallet.size()+1 && displayindex!=1){displayindex--}
                 updatedisplay()
-                Log.d(tag,"Coin sent to friend: ${friendList.get(friendindex-1).username}")
-                Toast.makeText(this,"Coin sent to friend: ${friendList.get(friendindex-1).username}",Toast.LENGTH_SHORT).show()
+                Log.d(tag,"Coin sent to friend: ${friendList[friendindex-1].username}")
+                Toast.makeText(this,"Coin sent to friend: ${friendList[friendindex-1].username}",Toast.LENGTH_SHORT).show()
             }
                     .addOnFailureListener { Log.d(tag,"Message failed!") }
             }}
@@ -161,7 +160,7 @@ class Friends : AppCompatActivity() {
             friendondisplay.text="You have no friends!"
         }
         else{
-            val friend=friendList.get(friendindex-1)
+            val friend=friendList[friendindex-1]
             val name=friend.username
             friendondisplay.text=name
         }
@@ -269,7 +268,7 @@ class Friends : AppCompatActivity() {
             ref.addListenerForSingleValueEvent(object:ValueEventListener{
                 override fun onDataChange(p0: DataSnapshot) {
                     p0.children.forEach{
-                        Log.d(tag,"User added to the list!, ${it.toString()}")
+                        Log.d(tag,"User added to the list!, $it")
                         val friend=it.getValue(User::class.java)!!
                         friendList.add(friend)
                         updatefrienddisplay()
@@ -332,7 +331,7 @@ class Friends : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
 
-                Log.d(tag,"Got current user!, ${p0.toString()}")
+                Log.d(tag,"Got current user!, $p0")
                 currentuser=p0.getValue(User::class.java)!!
 
 

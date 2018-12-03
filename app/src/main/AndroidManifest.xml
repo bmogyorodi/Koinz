@@ -29,7 +29,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".Map" />
-        <activity android:name=".Bankmenu" />
         <activity android:name=".Bonuses" />
         <activity android:name=".Friends" />
         <activity android:name=".Currency" />
@@ -37,7 +36,7 @@
         <activity android:name=".Register" />
         <activity android:name=".Depositcoinz" />
         <activity android:name=".AddFriend" />
-        <activity android:name=".Challenges"></activity>
+        <activity android:name=".Challenges" />
     </application>
 
 </manifest>

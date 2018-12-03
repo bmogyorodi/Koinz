@@ -87,6 +87,7 @@ class Depositcoinz : AppCompatActivity() {
                     dailycollect--
                     if (displayindex==wallet.size()+1 && displayindex!=1){displayindex--}
                     updatedisplay()
+                    updateDepositdisplay()
                     Log.d(tag,"Coin deposited ${coin.getid()}")
                 }
 
@@ -126,6 +127,7 @@ class Depositcoinz : AppCompatActivity() {
         shil = settings.getInt("shilNum", 0)
         dolr = settings.getInt("dolrNum", 0)
         dailycollect=settings.getInt("dailycollect",25)
+        updateDepositdisplay()
         // gets current currencies held by user to modify and the amount of coinz they can collect today
 
 
@@ -217,6 +219,9 @@ class Depositcoinz : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
 
 
+    }
+    private fun updateDepositdisplay(){
+        displaydailydepositleft.text="You can make $dailycollect more deposits today"
     }
 
 

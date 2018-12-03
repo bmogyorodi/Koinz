@@ -26,20 +26,24 @@ class Wallet constructor (private val capacity:Int=50 ) {
 
     }
     fun removeCoin(coinz: Coinz):Coinz? {
-        if(coins.contains(coinz))
+        return if(coins.contains(coinz))
         {
             coins.remove(coinz)
-            return coinz
+            coinz
         }
-        else{return null}
+        else{
+            null
+        }
         //removes coin from wallet and returns it
     }
 
 
     fun getCoin(index:Int):Coinz?{
-        if(!(coins.size>index)){
-            return null
-        }else{return coins.get(index)}
+        return if(coins.size<=index){
+            null
+        }else{
+            coins[index]
+        }
         //accesses coin from wallet based on index
     }
     fun size():Int{
@@ -86,7 +90,7 @@ class Wallet constructor (private val capacity:Int=50 ) {
 
 
 
-        }
+        } //every coin connected to the wallet in the database is added to the wallet in the application one by one
 
 
     }
@@ -98,5 +102,5 @@ class Wallet constructor (private val capacity:Int=50 ) {
     }
     fun isfull():Boolean{
         return this.size()==this.capacity
-    }
+    } //checks if the wallet is at full capacity
 }

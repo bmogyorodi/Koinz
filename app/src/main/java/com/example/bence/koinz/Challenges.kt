@@ -23,8 +23,6 @@ class Challenges : AppCompatActivity() {
     private var requestindex=1
     private var today=""
     private val prefs="MyPrefsFile"
-    private val coinzFile= "Coinzfile"
-    private var collectedCoinz=0
     private var challengegold=0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,7 +93,6 @@ class Challenges : AppCompatActivity() {
         fetchdate()
         fetchCurUser()
         fetchfriends()
-        updateTodaysCollection()
         listenForChallanges()
         fetchActiveChallenges()
     }
@@ -114,7 +111,7 @@ class Challenges : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
 
-                Log.d(tag,"Got current user!, ${p0.toString()}")
+                Log.d(tag,"Got current user!, $p0")
                 currentuser=p0.getValue(User::class.java)!!
 
 
@@ -134,7 +131,7 @@ class Challenges : AppCompatActivity() {
             ref.addListenerForSingleValueEvent(object:ValueEventListener{
                 override fun onDataChange(p0: DataSnapshot) {
                     p0.children.forEach{
-                        Log.d(tag,"User added to the list!, ${it.toString()}")
+                        Log.d(tag,"User added to the list!, $it")
                         val friend=it.getValue(User::class.java)!!
                         friendList.add(friend)
 
@@ -158,9 +155,10 @@ class Challenges : AppCompatActivity() {
             challangesdisplay.text="You have no challenge requests!"
         }
         else{
-            val request=requesttoyou.get(requestindex-1)
+            val request=requesttoyou[requestindex-1]
             val name=request.fromname
-            challangesdisplay.text="$name challenged you to a duel!"
+            val date=request.ondate
+            challangesdisplay.text="$name challenged you to a duel on $date!"
         }
     }
     private fun isMatchingDatabase(name:String):Boolean{
@@ -213,7 +211,7 @@ class Challenges : AppCompatActivity() {
                 val request=p0.getValue(ChallengeRequest::class.java)
                 if(request!=null)
                 {
-                    Log.d(tag,"Request received: ${request}")
+                    Log.d(tag,"Request received: $request")
                     requesttoyou.add(request)
                     updateChallangedisplay()
                 }
@@ -240,22 +238,7 @@ class Challenges : AppCompatActivity() {
         })
 
     }
-    private fun countCollection(){
-        val setting=getSharedPreferences(coinzFile, Context.MODE_PRIVATE)
-        for (i in 0..49)
-        {
-            if(setting.getBoolean("$i Taken",false))
-            {
-                collectedCoinz++
-            }
-        }
-        Log.d(tag,"Today you colleced: $collectedCoinz coinz!")
-    }
-    private fun updateTodaysCollection(){
-        countCollection()
-        val ref=FirebaseDatabase.getInstance().getReference("/collection/$today/$useruid")
-        ref.setValue(collectedCoinz)
-    }
+
     private fun deleteRequest(challange: ChallengeRequest){
         val toid=challange.toid
         val id=challange.id
@@ -287,7 +270,7 @@ class Challenges : AppCompatActivity() {
     private fun saveChallange(challange: ChallengeRequest){
         val fromid=challange.fromid
         val toid=challange.toid
-        val id =challange.id
+
         val refone=FirebaseDatabase.getInstance().getReference("activeChallenges/$fromid").push()
         val reftwo=FirebaseDatabase.getInstance().getReference("activeChallenges/$toid").push()
         val key1=refone.key?:""
@@ -301,18 +284,7 @@ class Challenges : AppCompatActivity() {
             Log.d(tag,"Challenge added to list! (number2)")
         }
     }
-    private fun fetchUserByUid(uid:String):User?{
 
-        for(person in friendList){
-            if(person.uid==uid){return person}
-        }
-        if(useruid==uid){
-            return currentuser
-        }
-        return null
-
-
-    }
     private fun fetchActiveChallenges(){
         val ref=FirebaseDatabase.getInstance().getReference("activeChallenges/$useruid")
         ref.addChildEventListener(object :ChildEventListener{

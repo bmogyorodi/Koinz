@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
      private var depriator=false
      private var exchangeenabled=true
      private var extracost=100
+    private var collectedCoinz=0
 
 
     // for storing preferences
@@ -94,6 +95,14 @@ class MainActivity : AppCompatActivity() {
         val formatted = today.format(formatter)
         val settings= getSharedPreferences(prefsFile, Context.MODE_PRIVATE)
         downloadDate=settings.getString("lastDownloadDate","")//getting last download date from prefs file
+
+
+
+
+
+        if(downloadDate!=""){
+            updateTodaysCollection()
+        }
 
 
         if(user==null){
@@ -171,6 +180,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
     private fun downloadgeojson(todaydate : String){
         val url ="http://homepages.inf.ed.ac.uk/stg/coinz/$todaydate/coinzmap.geojson"
 
@@ -241,16 +251,12 @@ class MainActivity : AppCompatActivity() {
             val id=properties.getString("id")
             val value=properties.getString("value").toFloat()
             val currency=properties.getString("currency")
-            val markersym=properties.getString("marker-symbol").toInt()
             val coordinates=geometry.getJSONArray("coordinates")
-            val markercolor=properties.getString("marker-color")
             val longitude=coordinates.getDouble(0)
             val latitude=coordinates.getDouble(1)
             editor.putString("$i id", id)
             editor.putFloat("$i value",value)
             editor.putString("$i currency",currency)
-            editor.putInt("$i markersym",markersym)
-            editor.putString("$i markercolor",markercolor)
             editor.putFloat("$i longitude", longitude.toFloat())
             editor.putFloat("$i latitude", latitude.toFloat())
             editor.putBoolean("$i Taken", false) //storing data on coinz on seperate Coinzfile preference file, names include id space attribute
@@ -279,7 +285,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
 
-                    Log.d(tag,"User added to the list!, ${p0.toString()}")
+                    Log.d(tag,"User added to the list!, $p0")
                     val user=p0.getValue(User::class.java)!!
                     if(useruid==user.uid){
                         logintag.text="Logged in as: ${user.username}"
@@ -294,4 +300,20 @@ class MainActivity : AppCompatActivity() {
             })
 
 }
+    private fun countCollection(){
+        val setting=getSharedPreferences(coinzFile, Context.MODE_PRIVATE)
+        for (i in 0..49)
+        {
+            if(setting.getBoolean("$i Taken",false))
+            {
+                collectedCoinz++
+            }
+        }
+        Log.d(tag,"Today you colleced: $collectedCoinz coinz!")
+    }
+    private fun updateTodaysCollection(){
+        countCollection()
+        val ref=FirebaseDatabase.getInstance().getReference("/collection/$downloadDate/$useruid")
+        ref.setValue(collectedCoinz)
+    }
 }

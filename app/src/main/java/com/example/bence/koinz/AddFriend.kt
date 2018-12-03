@@ -23,7 +23,7 @@ class AddFriend : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_friend)
-        supportActionBar?.title=tag
+        supportActionBar?.title="Add Friends"
         buttonsendrequest.setOnClickListener {
             val friendname=enterfriendnamehere.text.toString()
             val friend =fetchUserByname(friendname)
@@ -103,7 +103,7 @@ class AddFriend : AppCompatActivity() {
         ref.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 p0.children.forEach{
-                    Log.d(tag,"User added to the list!, ${it.toString()}")
+                    Log.d(tag,"User added to the list!, $it")
                     val friend=it.getValue(User::class.java)!!
                     if(user?.uid!=friend.uid){
                         users.add(friend)
@@ -183,7 +183,7 @@ class AddFriend : AppCompatActivity() {
                 val request=p0.getValue(FriendRequest::class.java)
                 if(request!=null)
                 {
-                    Log.d(tag,"Request received: ${request}")
+                    Log.d(tag,"Request received: $request")
                     requesttoyou.add(request)
                     updateRequestDisplay()
                 }
@@ -241,7 +241,7 @@ class AddFriend : AppCompatActivity() {
             ref.addListenerForSingleValueEvent(object:ValueEventListener{
                 override fun onDataChange(p0: DataSnapshot) {
                     p0.children.forEach{
-                        Log.d(tag,"User added to the list!, ${it.toString()}")
+                        Log.d(tag,"User added to the list!, $it")
                         val friend=it.getValue(User::class.java)!!
                         friendList.add(friend)
 

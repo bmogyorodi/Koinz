@@ -3,10 +3,10 @@ package com.example.bence.koinz
 
 
 
-class Coinz constructor(private val id: String, private var value: Float, private val currency: String, private val markersym: Int, private val markercolor: String, private val latitude: Float, private val longitude: Float, private var taken: Boolean){
+class Coinz constructor(private val id: String, private var value: Float, private val currency: String,   private val latitude: Float, private val longitude: Float, private var taken: Boolean){
 
 
-    constructor():this("", 0F,"",0,"",0F,0F,true)
+    constructor():this("", 0F,"",0F,0F,true)
     // this constructor is made to enable fetching the coinz from the database in the wallet class
 
 
@@ -19,12 +19,8 @@ class Coinz constructor(private val id: String, private var value: Float, privat
      fun getcurrency():String{
         return this.currency
     }
-     fun getmarkersym():Int{
-        return this.markersym.toString().toInt()
-    }
-     fun getmarkercolor():String{
-        return this.markercolor
-    }
+
+
      fun getlat(): Double{
         return this.latitude.toDouble()
     }
@@ -51,12 +47,15 @@ class Coinz constructor(private val id: String, private var value: Float, privat
         return false
     }
 
-
-
-
-
-
-
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + value.hashCode()
+        result = 31 * result + currency.hashCode()
+        result = 31 * result + latitude.hashCode()
+        result = 31 * result + longitude.hashCode()
+        result = 31 * result + taken.hashCode()
+        return result
+    }
 
 
 }

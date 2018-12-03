@@ -52,7 +52,7 @@ class Currency : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_currency)
-        supportActionBar?.title="Bank of coinz"
+        supportActionBar?.title="Bank of Coinz"
 
         updolr.setOnClickListener{_ ->
             if(dolrsel<dolr && allowedexchange>allsel)
