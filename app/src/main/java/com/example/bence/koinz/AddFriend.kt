@@ -32,6 +32,7 @@ class AddFriend : AppCompatActivity() {
                     Toast.makeText(this,"You are already friends with this user!",Toast.LENGTH_LONG).show()
                 }
                 else {
+
                     sendRequesttoUser(friend)
                 }
             }
@@ -40,6 +41,7 @@ class AddFriend : AppCompatActivity() {
                 Log.d(tag,"No match found in the database")
                 Toast.makeText(this,"Couldn't find name in our database!",Toast.LENGTH_SHORT).show()
             }
+            enterfriendnamehere.text.clear()
         }
         requestback.setOnClickListener {_->
             if(requestindex!=1)

@@ -33,3 +33,16 @@ class FriendRequest constructor(val id: String,val fromid: String,val fromname:S
         return false
     }
 }
+class ChallengeRequest constructor(var id:String,val fromid: String,val fromname: String,val ondate:String,val toid: String,val toname:String){
+    constructor():this("","","","","","")
+    fun resetid(newid:String){
+        this.id=newid
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if(other is ChallengeRequest){
+            this.id==other.id
+        }
+        return false
+    }
+}

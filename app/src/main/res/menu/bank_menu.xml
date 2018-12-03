@@ -2,14 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/toAddFriends"
-        android:title="New friends"
+        android:id="@+id/toMap"
+        android:title="Map"
         app:showAsAction="ifRoom" />item
     <item
-        android:id="@+id/toChallenges"
-        android:title="Challenges"
+        android:id="@+id/toWallet"
+        android:title="Wallet"
         app:showAsAction="ifRoom" />item
-
     <item
         android:id="@+id/backtomenu"
         android:title="back"

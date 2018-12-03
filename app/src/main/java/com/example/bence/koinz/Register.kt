@@ -41,8 +41,8 @@ class Register : AppCompatActivity() {
 
 
 
-    private fun saveuserName(){
-        val username= writename.text.toString()
+    private fun saveuserName(username:String){
+
         val uid= FirebaseAuth.getInstance().uid?:""
         val ref= FirebaseDatabase.getInstance().getReference("users/$uid")
         val user=User(uid,username)
@@ -53,7 +53,8 @@ class Register : AppCompatActivity() {
     private fun registernewuser(){
         val email = writeemail.text.toString()
         val password= writepassword.text.toString()
-        if (email.isEmpty() || password.isEmpty()) return
+        val username= writename.text.toString()
+        if (email.isEmpty() || password.isEmpty() || username.isEmpty()) return
 
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password).addOnCompleteListener{
             if(!it.isSuccessful) return@addOnCompleteListener
@@ -62,7 +63,7 @@ class Register : AppCompatActivity() {
 
             Log.d( tag, "Successfully created user with uid: ${it.result?.user?.uid}" )
             Toast.makeText(this,"Successfully created user with uid: ${it.result?.user?.uid}",Toast.LENGTH_SHORT).show()
-            saveuserName() //display message on successful registration
+            saveuserName(username) //display message on successful registration
 
         }.addOnFailureListener {
             Log.d(tag, "Failed to create user: ${it.message}")

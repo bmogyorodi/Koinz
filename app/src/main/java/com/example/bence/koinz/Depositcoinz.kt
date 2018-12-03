@@ -26,6 +26,7 @@ class Depositcoinz : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_depositcoinz)
+        supportActionBar?.title="Wallet"
         wallet.getwallet() // get wallet from database
 
 
@@ -173,11 +174,7 @@ class Depositcoinz : AppCompatActivity() {
         }
         //adds coin value to the right currency variable based coin currency attribute
     }
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.wallet_menu, menu)
-        return true
-    }
+
     private fun savechanges(){
         val editor=getSharedPreferences(prefs,Context.MODE_PRIVATE).edit()
 
@@ -190,6 +187,11 @@ class Depositcoinz : AppCompatActivity() {
         wallet.savewallet()
 
     }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.wallet_menu, menu)
+        return true
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
@@ -201,8 +203,13 @@ class Depositcoinz : AppCompatActivity() {
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
+            R.id.toconverter->{
+                val intent=Intent(this,Currency::class.java)
+                intent.flags=Intent.FLAG_ACTIVITY_NEW_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
             R.id.backtomenu->{
-                val intent= Intent(this,Bankmenu::class.java)
+                val intent= Intent(this,MainActivity::class.java)
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }

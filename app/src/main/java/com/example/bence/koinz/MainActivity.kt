@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
         } //takes user to map activity
         bankmenu.setOnClickListener { _ ->
-           val intent = Intent(this,Bankmenu::class.java)
+           val intent = Intent(this,Currency::class.java)
             startActivity(intent)
 
 
@@ -270,7 +270,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun fetchCurUser(){
 
-        val ref = FirebaseDatabase.getInstance().getReference("/users")
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$useruid")
 
         ref.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -278,16 +278,16 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                p0.children.forEach{
-                    Log.d(tag,"User added to the list!, ${it.toString()}")
-                    val user=it.getValue(User::class.java)!!
+
+                    Log.d(tag,"User added to the list!, ${p0.toString()}")
+                    val user=p0.getValue(User::class.java)!!
                     if(useruid==user.uid){
                         logintag.text="Logged in as: ${user.username}"
 
                     }
 
 
-                    }
+
 
 
                 }

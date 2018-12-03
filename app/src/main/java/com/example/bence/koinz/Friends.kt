@@ -309,40 +309,40 @@ class Friends : AppCompatActivity() {
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
+            R.id.toChallenges->{
+                val intent=Intent(this,Challenges::class.java)
+                intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+
+            }
 
         }
         return super.onOptionsItemSelected(item)
 
 
     }
-    private fun fetchCurUser() {
+    private fun fetchCurUser(){
 
-        val ref = FirebaseDatabase.getInstance().getReference("/users")
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$useruid")
 
         ref.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                p0.children.forEach{
-                    Log.d(tag,"User added to the list!, ${it.toString()}")
-                    val friend=it.getValue(User::class.java)!!
-                    if(user?.uid!=friend.uid){
-
-
-                    }
-                    else{
-                        currentuser=friend
-
-                    }
-
-                }
-            }
-
-
             override fun onCancelled(p0: DatabaseError) {
-                Log.d(tag,"User couldn't be added!")
 
             }
 
+            override fun onDataChange(p0: DataSnapshot) {
+
+                Log.d(tag,"Got current user!, ${p0.toString()}")
+                currentuser=p0.getValue(User::class.java)!!
+
+
+
+
+
+
+            }
         })
+
     }
 
 }

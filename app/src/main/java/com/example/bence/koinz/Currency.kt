@@ -52,6 +52,7 @@ class Currency : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_currency)
+        supportActionBar?.title="Bank of coinz"
 
         updolr.setOnClickListener{_ ->
             if(dolrsel<dolr && allowedexchange>allsel)
@@ -223,7 +224,7 @@ class Currency : AppCompatActivity() {
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.backto_menu, menu)
+        menuInflater.inflate(R.menu.bank_menu, menu)
         return true
     }
 
@@ -232,14 +233,25 @@ class Currency : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         when(item.itemId){
-            R.id.backtomenu->{
-                val intent= Intent(this,Bankmenu::class.java)
+            R.id.toMap->{
+                val intent= Intent(this,Map::class.java)
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
-            } // adding sign out button, which signs out the user if clicked and redirects to Login activity
+            }
+            R.id.toWallet->{
+                val intent=Intent(this,Depositcoinz::class.java)
+                intent.flags=Intent.FLAG_ACTIVITY_NEW_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+            R.id.backtomenu->{
+                val intent= Intent(this,MainActivity::class.java)
+                intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
         }
         return super.onOptionsItemSelected(item)
 
 
     }
+
 }

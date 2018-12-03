@@ -6,6 +6,10 @@
         android:title="Map"
         app:showAsAction="ifRoom" />item
     <item
+        android:id="@+id/toconverter"
+        android:title="Bank"
+        app:showAsAction="ifRoom" />item
+    <item
         android:id="@+id/backtomenu"
         android:title="back"
         app:showAsAction="ifRoom" />item
