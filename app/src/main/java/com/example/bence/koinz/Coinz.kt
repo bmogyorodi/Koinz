@@ -33,13 +33,14 @@ class Coinz constructor(private val id: String, private var value: Float, privat
     fun taken(){
         this.taken=true
     }
+    //getter functions
     fun depriciate(){
         this.value -= 1
         if(this.value<0)
         {
             this.value=0F
         }
-    }
+    } // reduces the value of the coin by one (coinz in the wallet needs to lose 1 from their value
     override fun equals(other: Any?): Boolean {
         if(other is Coinz){
             return this.getid()==other.getid()

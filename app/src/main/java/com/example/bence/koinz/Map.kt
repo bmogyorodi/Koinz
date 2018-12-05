@@ -326,17 +326,17 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
                 val intent= Intent(this,Depositcoinz::class.java)
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
-            }
+            } // wallet button, takes user to DepositCoinz menu
             R.id.showrates->{
                 val exchange="Exchange rates: \n Peny: $penyx \n Quid: $quidx \n Shil: $shilx \n Dolr: $dolrx"
                 Toast.makeText(this,exchange,5).show()
 
-            }
+            } // rates button, shows user today's rates
             R.id.backtomenu->{
                 val intent= Intent(this,MainActivity::class.java)
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
-            }
+            } // back button takes user to MainActivity (main-menu)
         }
         return super.onOptionsItemSelected(item)
 
@@ -348,7 +348,7 @@ class Map : AppCompatActivity(),OnMapReadyCallback, PermissionsListener, Locatio
         quidx= settings.getFloat("quidEX", 10F).toDouble()
         shilx= settings.getFloat("shilEX", 10F).toDouble()
         dolrx= settings.getFloat("dolrEX", 10F).toDouble()
-    }
+    } // gets rates from preference file for display
 
 
 

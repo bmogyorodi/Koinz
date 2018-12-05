@@ -19,9 +19,9 @@ class Friends : AppCompatActivity() {
     private val tag = "Friends"
     private var displayindex = 1
     private var friendindex=1
-    private var recievedcoinz=ArrayList<Coinz>()
-    private var sendersList=ArrayList<String>()
-    private var giftids=ArrayList<String>()
+    private var recievedcoinz=ArrayList<Coinz>() //list of coinz sent in the incoming requests
+    private var sendersList=ArrayList<String>() //list of users the incoming requests are from
+    private var giftids=ArrayList<String>() // coin id's alligning with sendersList and recieved coinz, helps to construct display of sent coin and sender name.
     private val user = FirebaseAuth.getInstance().currentUser
     private val useruid=user?.uid?:""
     private lateinit var currentuser:User
@@ -66,6 +66,7 @@ class Friends : AppCompatActivity() {
                 updatefrienddisplay()
             }
         }
+        //buttons changing index if possible of displayed friend name and displayed coin, also updating display after change
             buttonwalletfriend.setOnClickListener{_->
                 stepbackfriend.visibility= View.VISIBLE
                 stepfowardfriend.visibility=View.VISIBLE
@@ -73,6 +74,7 @@ class Friends : AppCompatActivity() {
                 buttonwalletfriend.visibility=View.INVISIBLE
                 buttonsendcoin.isEnabled=true
                 updatedisplay()
+                // helps in handling slight delay of asychronous getwallet function, by covering up wallet with a button. After button push the getwallet function is definitely finished.
 
             }
         buttonsendcoin.setOnClickListener{_->
@@ -90,42 +92,35 @@ class Friends : AppCompatActivity() {
             val fromid=currentuser.uid
                 val fromname=currentuser.username
 
-            val toid=friendList[friendindex-1].uid
+            val toid=friendList[friendindex-1].uid //takes currently displayed friend's id
             val ref= FirebaseDatabase.getInstance().getReference("messages/$toid").push()
             val key=ref.key
 
-            val coin=wallet.getCoin(displayindex-1)
+            val coin=wallet.getCoin(displayindex-1) //takes currently displayed coin
             if(coin!=null){
 
             if(fromid!="" && key!=null){
 
-            val message=Message(key,fromid,fromname,toid,coin)
+            val message=Message(key,fromid,fromname,toid,coin) //creates a Message of selected parameters to be sent
 
 
             ref.setValue(message).addOnCompleteListener {
                 wallet.removeCoin(coin)
-                wallet.savewallet()
+                wallet.savewallet() //save modified wallet to Firebase
                 if (displayindex==wallet.size()+1 && displayindex!=1){displayindex--}
                 updatedisplay()
                 Log.d(tag,"Coin sent to friend: ${friendList[friendindex-1].username}")
                 Toast.makeText(this,"Coin sent to friend: ${friendList[friendindex-1].username}",Toast.LENGTH_SHORT).show()
-            }
+            } // send message to node messages belonging to the receivers uid.
                     .addOnFailureListener { Log.d(tag,"Message failed!") }
             }}
         }}
         buttonCollector.setOnClickListener { _ ->
             bankRecievedCoinz()
             updateCollectorButton()
-        }
+        } //button to collect received coin
 
         }
-
-
-
-
-
-
-
 
     override fun onStart() {
         super.onStart()
@@ -154,7 +149,7 @@ class Friends : AppCompatActivity() {
 
             }
     }
-}
+} // update currently displayed coin of the wallet
    private fun updatefrienddisplay(){
         if(friendList.size==0){
             friendondisplay.text="You have no friends!"
@@ -164,7 +159,7 @@ class Friends : AppCompatActivity() {
             val name=friend.username
             friendondisplay.text=name
         }
-    }
+    } //update currently displayed friend of the friendlist using the friendindex
 
     private fun listenforMessages(){
 
@@ -179,6 +174,7 @@ class Friends : AppCompatActivity() {
                 recievedcoinz.add(message.coin)
                     sendersList.add(message.fromname)
                     giftids.add(message.id)
+                    //update ArrayLists helping with handling received coinz
 
                 updateCollectorButton()}
 
@@ -211,7 +207,7 @@ class Friends : AppCompatActivity() {
         recievedcoinz.removeAt(0)
         sendersList.removeAt(0)
             cointocurrecy(coin)
-        val id=giftids[0]
+        val id=giftids[0] //used to delete the right message  after coin  it is collected
 
         val editor=getSharedPreferences(prefs, Context.MODE_PRIVATE).edit()
         editor.putInt("penyNum",peny)
@@ -224,7 +220,7 @@ class Friends : AppCompatActivity() {
         ref.removeValue()
         giftids.removeAt(0)
 
-    }
+    } //removes top received coin from all ArrayLists and removes corresponding node of the message from Firebase database
     private fun updateCollectorButton(){
         val coinnum=recievedcoinz.size
 
@@ -240,7 +236,7 @@ class Friends : AppCompatActivity() {
             buttonCollector.isEnabled=false
             buttonCollector.text="No coinz from friends"
         }
-    }
+    } //updates collector button, always the 0th index of the ArrayList that saves the coin and sender
     private fun cointocurrecy(coin:Coinz){
         if(coin.getcurrency()=="DOLR")
         {
@@ -282,7 +278,7 @@ class Friends : AppCompatActivity() {
                 }
 
             })
-        }
+        } // gets user's friends from friendlist node to fill up friendlist Arraylist
         else{
             Toast.makeText(this,"No user found please log in!",Toast.LENGTH_SHORT)
         }
@@ -302,16 +298,19 @@ class Friends : AppCompatActivity() {
                 val intent= Intent(this,AddFriend::class.java)
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
+                //addfriend button sends user to AddFriend activity
             }
             R.id.backtomenu->{
                 val intent=Intent(this,MainActivity::class.java)
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
+                //back button sends user to MainActivity (main-menu)
             }
             R.id.toChallenges->{
                 val intent=Intent(this,Challenges::class.java)
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
+                // challenges button sends user to Challenges activity
 
             }
 
@@ -342,7 +341,7 @@ class Friends : AppCompatActivity() {
             }
         })
 
-    }
+    } // get's current user from the user's data node in the database
 
 }
 

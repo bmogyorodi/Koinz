@@ -273,7 +273,7 @@ class MainActivity : AppCompatActivity() {
         editor.putBoolean("exisallowed",exchangeenabled)
         editor.apply()
 
-    }
+    } // updates values to their default starter values when lastdownload date is updated
     private fun fetchCurUser(){
 
         val ref = FirebaseDatabase.getInstance().getReference("/users/$useruid")
@@ -299,7 +299,7 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-}
+}  //getting current user  to be displayed
     private fun countCollection(){
         val setting=getSharedPreferences(coinzFile, Context.MODE_PRIVATE)
         for (i in 0..49)
@@ -310,10 +310,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
         Log.d(tag,"Today you colleced: $collectedCoinz coinz!")
-    }
+    } // updates number of collected coinz based on number of isTaken Booleans with value true
     private fun updateTodaysCollection(){
         countCollection()
         val ref=FirebaseDatabase.getInstance().getReference("/collection/$downloadDate/$useruid")
         ref.setValue(collectedCoinz)
-    }
+    } // rewrites today's collected coinz in the database on the collection/today'sdate/useruid node
 }

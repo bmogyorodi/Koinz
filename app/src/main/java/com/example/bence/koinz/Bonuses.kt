@@ -113,6 +113,7 @@ class Bonuses : AppCompatActivity() {
         gold=settings.getInt("goldNum",0)
         displaygold.text="Gold: $gold"
         updateBonusButtons()
+        //use of gettarget attribute of bonuses to easily find the variable in the preference file which contains the information on their purchase status
 
     }
     private fun updateBonusButtons() //updates the availability of bonus buttons based on which ones are purchased
@@ -174,7 +175,7 @@ class Bonuses : AppCompatActivity() {
                 val intent= Intent(this,MainActivity::class.java)
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
-            } // adding sign out button, which signs out the user if clicked and redirects to Login activity
+            } // adding back button, to return to main activity
         }
         return super.onOptionsItemSelected(item)
 

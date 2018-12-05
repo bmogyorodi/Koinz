@@ -40,7 +40,7 @@ class FriendRequest constructor(val id: String,val fromid: String,val fromname:S
         result = 31 * result + toid.hashCode()
         return result
     }
-}
+} //data structure used for FriendRequests. Stores id of the node where the data is stored in Firebase, sender's uid and username, and receivers uid
 class ChallengeRequest constructor(var id:String,val fromid: String,val fromname: String,val ondate:String,val toid: String,val toname:String){
     constructor():this("","","","","","")
     fun resetid(newid:String){
@@ -63,4 +63,4 @@ class ChallengeRequest constructor(var id:String,val fromid: String,val fromname
         result = 31 * result + toname.hashCode()
         return result
     }
-}
+} // data structure used for Challenge reqeusts. Stores id of the node where the data is stored in Firebase, sender's and receiver's uid and username, and the date of the day when the challenge is sent.

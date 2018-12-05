@@ -33,7 +33,7 @@ class Challenges : AppCompatActivity() {
             val friendname=writechallange.text.toString()
             val friend =fetchFriendByname(friendname)
             if (friend!=null){
-
+// only sends challange if input user is in the friendlist
                     sendChallengetoUser(friend)
 
             }
@@ -58,7 +58,7 @@ class Challenges : AppCompatActivity() {
                 updateChallangedisplay()
             }
 
-        }
+        } // similar display updater as in addfriend or wallet
         buttondeclineChallenge.setOnClickListener { _->
         if(requesttoyou.size!=0){
             val selectedRequest=requesttoyou[requestindex-1]
@@ -66,17 +66,17 @@ class Challenges : AppCompatActivity() {
             requesttoyou.removeAt(requestindex-1)
             if (requestindex==requesttoyou.size+1 && requestindex!=1){requestindex--}
             updateChallangedisplay()}
-        }
+        } //same logic as buttondeclinefriendrequest in AddFriend
         buttonacceptChallenge.setOnClickListener{ _->
             if(requesttoyou.size!=0){
                 val selectedRequest=requesttoyou[requestindex-1]
                 deleteRequest(selectedRequest)
                 requesttoyou.removeAt(requestindex-1)
-                saveChallange(selectedRequest)
+                saveChallenge(selectedRequest)
                 if (requestindex==requesttoyou.size+1 && requestindex!=1){requestindex--}
                 updateChallangedisplay()
 
-            }}
+            }} // same logic as buttonacceptfriendreqeust as in AddFriend
         buttoncollectchallengegold.setOnClickListener { _->
             val settings=getSharedPreferences(prefs, Context.MODE_PRIVATE)
             var gold= settings.getInt("goldNum",0)
@@ -85,18 +85,19 @@ class Challenges : AppCompatActivity() {
             editor.putInt("goldNum",gold)
             editor.apply()
             challengegold=0
+            //edits gold in the preference file, adds challenge gold (500 gold per completed and won challenge
         }
     }
 
     override fun onStart() {
         super.onStart()
-        fetchdate()
-        fetchCurUser()
-        fetchfriends()
-        listenForChallanges()
-        fetchActiveChallenges()
+        fetchdate() //to get today's date
+        fetchCurUser() //to get current user as class User
+        fetchfriends() // to get friends in a ListArray
+        listenForChallanges() // to add Challenges in the challengerequest node of the user to the reuqesttoyou ArrayList
+        fetchActiveChallenges() //Checks if any active challenges are completed and adds 500 to challenge gold if user  won any challenges
     }
-    private fun fetchdate(){
+    private fun fetchdate(){ //getting date from preference file
         val setting=getSharedPreferences(prefs, Context.MODE_PRIVATE)
         today=setting.getString("lastDownloadDate","")
     }
@@ -124,6 +125,7 @@ class Challenges : AppCompatActivity() {
 
     }
     private fun fetchfriends(){
+        //same function as the fetchfriends in AddFriend class
         val uid=user?.uid
         if(uid!=null)
         {
@@ -160,7 +162,7 @@ class Challenges : AppCompatActivity() {
             val date=request.ondate
             challangesdisplay.text="$name challenged you to a duel on $date!"
         }
-    }
+    } //updates display of challenge request
     private fun isMatchingDatabase(name:String):Boolean{
 
         for(person in friendList){
@@ -168,7 +170,7 @@ class Challenges : AppCompatActivity() {
         }
         return false
 
-    }
+    } //same function as in Add Friends
     private fun fetchFriendByname(name:String):User?{
         if(isMatchingDatabase(name)){
             for(person in friendList){
@@ -178,7 +180,7 @@ class Challenges : AppCompatActivity() {
         }
         else return null
 
-    }
+    } //same function as in Add Friends
     private fun sendChallengetoUser(person:User){
         val toid=person.uid
         val toname=person.username
@@ -202,7 +204,7 @@ class Challenges : AppCompatActivity() {
                 }
             }}
 
-    }
+    } //same function as in Add Friends, however this one fetches inputs of class ChallengeReqest and saves slightly different data structure
     private fun listenForChallanges(){
         val useruid=user?.uid?:""
         val ref=FirebaseDatabase.getInstance().getReference("challengerequests/$useruid")
@@ -237,7 +239,7 @@ class Challenges : AppCompatActivity() {
 
         })
 
-    }
+    } //same function as in Add Friends, however this one fetches data structure of class ChallengeReqest
 
     private fun deleteRequest(challange: ChallengeRequest){
         val toid=challange.toid
@@ -245,7 +247,7 @@ class Challenges : AppCompatActivity() {
         val ref=FirebaseDatabase.getInstance().getReference("challengerequests/$toid/$id")
         ref.removeValue()
 
-    }
+    } //same function as in Add Friends, just on different data node to delete Challenge Request
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.backto_menu, menu)
@@ -261,29 +263,29 @@ class Challenges : AppCompatActivity() {
                 val intent= Intent(this,Friends::class.java)
                 intent.flags= Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
-            } // adding sign out button, which signs out the user if clicked and redirects to Login activity
+            } // adding back to menu button, which returns user to the main friends activity
         }
         return super.onOptionsItemSelected(item)
 
 
     }
-    private fun saveChallange(challange: ChallengeRequest){
-        val fromid=challange.fromid
-        val toid=challange.toid
+    private fun saveChallenge(challenge: ChallengeRequest){
+        val fromid=challenge.fromid
+        val toid=challenge.toid
 
         val refone=FirebaseDatabase.getInstance().getReference("activeChallenges/$fromid").push()
         val reftwo=FirebaseDatabase.getInstance().getReference("activeChallenges/$toid").push()
         val key1=refone.key?:""
         val key2=reftwo.key?:""
-        challange.resetid(key1)
-        refone.setValue(challange).addOnCompleteListener {
+        challenge.resetid(key1)
+        refone.setValue(challenge).addOnCompleteListener {
             Log.d(tag,"Challenge added to list! (number1)")
         }
-        challange.resetid(key2)
-        reftwo.setValue(challange).addOnCompleteListener {
+        challenge.resetid(key2)
+        reftwo.setValue(challenge).addOnCompleteListener {
             Log.d(tag,"Challenge added to list! (number2)")
         }
-    }
+    } //similar to savefriendship function in AddFriend, only difference is target node and saved data structure (adds challenge to both users' activeChallenges list
 
     private fun fetchActiveChallenges(){
         val ref=FirebaseDatabase.getInstance().getReference("activeChallenges/$useruid")
@@ -292,6 +294,7 @@ class Challenges : AppCompatActivity() {
                 val challenge=p0.getValue(ChallengeRequest::class.java )
                 if (challenge!=null){
                     if(challenge.ondate!=today){
+                        // if the day what the challenge was sent is passed the app can conlude a winner
                         concludeChallenge(challenge)
                     }
                 }
@@ -317,7 +320,7 @@ class Challenges : AppCompatActivity() {
 
         })
 
-    }
+    } // get's user's active  Challenges from the data node having user's uid
     private fun concludeChallenge(challenge: ChallengeRequest){
         val playerone=challenge.fromid
         val playertwo=challenge.toid
@@ -328,8 +331,8 @@ class Challenges : AppCompatActivity() {
         val refchallenge=FirebaseDatabase.getInstance().getReference("activeChallenges/$useruid/$id")
 
         val date=challenge.ondate
-        val refplayerone=FirebaseDatabase.getInstance().getReference("collection/$date/$playerone")
-        val refplayertwo=FirebaseDatabase.getInstance().getReference("collection/$date/$playertwo")
+        val refplayerone=FirebaseDatabase.getInstance().getReference("collection/$date/$playerone") //node contains players number of collected coinz on the day of the challenge
+        val refplayertwo=FirebaseDatabase.getInstance().getReference("collection/$date/$playertwo") // other players score
         refplayerone.addListenerForSingleValueEvent(object:ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
 
@@ -350,6 +353,7 @@ class Challenges : AppCompatActivity() {
             }
 
         })
+        // if reference is not found the point of the player just stays 0
         if(pointsone>pointstwo){
             winner=playerone
         }
@@ -358,18 +362,20 @@ class Challenges : AppCompatActivity() {
             {
                 winner=playertwo
             }
-        }
+        } // in order to be winner of the challenge the player needs to have more gold than the other player
         if(winner==useruid){
             challengegold+=500
             Log.d(tag,"You won a challenge!")
             buttoncollectchallengegold.text="You won $challengegold gold from challenges! \n Collect here!"
             refchallenge.removeValue()
+            //adds 500 gold to challenge gold if user wins the challenge, and deletes challenge from it's node
 
         }
         else
         {
             Log.d(tag,"You lost a challange")
             refchallenge.removeValue()
+            // deletes node, since challenge result was concluded, user doesn't win anything
         }
 
 

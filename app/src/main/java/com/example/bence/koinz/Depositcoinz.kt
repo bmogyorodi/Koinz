@@ -108,7 +108,7 @@ class Depositcoinz : AppCompatActivity() {
             coindisplay.visibility=View.VISIBLE
             buttonopenwallet.visibility=View.INVISIBLE
             updatedisplay()
-        }
+        } //button used to give time for the updatedisplay function to be called after getwallet function is finished. when pressed disappears and rest of the activity becomes visible
 
 
 
@@ -205,16 +205,17 @@ class Depositcoinz : AppCompatActivity() {
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
+            // map button, sends user to Map activity
             R.id.toconverter->{
                 val intent=Intent(this,Currency::class.java)
                 intent.flags=Intent.FLAG_ACTIVITY_NEW_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
-            }
+            } // Bank button, sends user to Currency activity
             R.id.backtomenu->{
                 val intent= Intent(this,MainActivity::class.java)
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
-            }
+            } // back button sends user to MainActivity (main-menu)
         }
         return super.onOptionsItemSelected(item)
 
@@ -223,6 +224,7 @@ class Depositcoinz : AppCompatActivity() {
     private fun updateDepositdisplay(){
         displaydailydepositleft.text="You can make $dailycollect more deposits today"
     }
+    //Updates count of available deposits today, called after deposit
 
 
 }

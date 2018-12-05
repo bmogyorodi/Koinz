@@ -146,7 +146,7 @@ class Currency : AppCompatActivity() {
                 exchangeenabled=false
                 buynewexchange.isEnabled=true
                 buynewexchange.visibility= View.VISIBLE
-                buynewexchange.text="extra exchange:$extracost G"
+                buynewexchange.text="extra exchange:$extracost G" //after use buynewexchange appears covering the button, and becomes enables
 
             }
             else
@@ -168,7 +168,7 @@ class Currency : AppCompatActivity() {
             {
                 Toast.makeText(this,"You don't have enough gold to purchase extra exchanges for today!",Toast.LENGTH_SHORT).show()
             }
-        }
+        }  // buying new purchase after which the button disappears until reactivated again.
 
 
 
@@ -193,7 +193,7 @@ class Currency : AppCompatActivity() {
             buynewexchange.isEnabled=true
             buynewexchange.visibility= View.VISIBLE
             buynewexchange.text="extra exchange:$extracost G"
-        }
+        } //check status of exchange purchases, and updating button accordingly
         //get users treasure, amount of each currency and gold, plus the dailyrates of currencies from the prefsfile
         updatetreasury()
         exrate.text="Exchange rates: \n Peny: $penyx \n Quid: $quidx \n Shil: $shilx \n Dolr: $dolrx"
@@ -207,6 +207,7 @@ class Currency : AppCompatActivity() {
         editor.putInt("extracost",extracost)
         editor.putBoolean("exisallowed",exchangeenabled)
         editor.apply()
+        //saves new extracost and exchangeenabled after usage of activity
 
     }
     private fun savetreasury(){
@@ -238,17 +239,20 @@ class Currency : AppCompatActivity() {
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
+            // map button, to send user to Map activity
             R.id.toWallet->{
                 val intent=Intent(this,Depositcoinz::class.java)
                 intent.flags=Intent.FLAG_ACTIVITY_NEW_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
+            // wallet button, to send user to Depositcoinz activity
             R.id.backtomenu->{
                 val intent= Intent(this,MainActivity::class.java)
                 intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
         }
+        // back button, to send user to MainActivity (main-menu)
         return super.onOptionsItemSelected(item)
 
 
