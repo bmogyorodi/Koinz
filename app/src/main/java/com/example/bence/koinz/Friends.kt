@@ -240,7 +240,7 @@ class Friends : AppCompatActivity() {
     private fun cointocurrecy(coin:Coinz){
         if(coin.getcurrency()=="DOLR")
         {
-            peny=(peny+coin.getvalue()+0.5).toInt()
+            dolr=(dolr+coin.getvalue()+0.5).toInt()
         }
         if(coin.getcurrency()=="SHIL")
         {
